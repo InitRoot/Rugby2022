@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.pnlApp = new System.Windows.Forms.Panel();
             this.tbcMain = new System.Windows.Forms.TabControl();
@@ -118,6 +119,8 @@
             this.PlayerIndex1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.label2 = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.txtLineUpModHEX = new System.Windows.Forms.TextBox();
+            this.txtLineupOrgHEX = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btnLineupReplace = new System.Windows.Forms.Button();
             this.btnRMLineUpPlayer = new System.Windows.Forms.Button();
@@ -128,6 +131,7 @@
             this.TeamIndex = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.tbpTeams = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.txtModTeamHEX = new System.Windows.Forms.TextBox();
             this.txtTeamHEX = new System.Windows.Forms.TextBox();
             this.txtShortName = new System.Windows.Forms.TextBox();
             this.txtTeamName = new System.Windows.Forms.TextBox();
@@ -144,6 +148,7 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
@@ -151,13 +156,12 @@
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusToolstrip = new System.Windows.Forms.ToolStripStatusLabel();
-            this.txtLineupOrgHEX = new System.Windows.Forms.TextBox();
-            this.txtLineUpModHEX = new System.Windows.Forms.TextBox();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.mainDBDataSet = new RC4Editor.MainDBDataSet();
             this.tblPlayersHexTableAdapter = new RC4Editor.MainDBDataSetTableAdapters.tblPlayersHexTableAdapter();
             this.tblTeamsHexTableAdapter = new RC4Editor.MainDBDataSetTableAdapters.tblTeamsHexTableAdapter();
             this.tblLineUpsHexTableAdapter = new RC4Editor.MainDBDataSetTableAdapters.tblLineUpsHexTableAdapter();
-            this.txtModTeamHEX = new System.Windows.Forms.TextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlApp.SuspendLayout();
             this.tbcMain.SuspendLayout();
             this.tbpPlayers.SuspendLayout();
@@ -953,7 +957,6 @@
             // olvColumn4
             // 
             this.olvColumn4.AspectName = "PlayerID";
-            this.olvColumn4.Groupable = false;
             this.olvColumn4.IsEditable = false;
             this.olvColumn4.Searchable = false;
             this.olvColumn4.Sortable = false;
@@ -1138,6 +1141,24 @@
             this.panel6.Size = new System.Drawing.Size(269, 559);
             this.panel6.TabIndex = 2;
             // 
+            // txtLineUpModHEX
+            // 
+            this.txtLineUpModHEX.Location = new System.Drawing.Point(12, 474);
+            this.txtLineUpModHEX.Multiline = true;
+            this.txtLineUpModHEX.Name = "txtLineUpModHEX";
+            this.txtLineUpModHEX.Size = new System.Drawing.Size(254, 65);
+            this.txtLineUpModHEX.TabIndex = 94;
+            this.txtLineUpModHEX.Visible = false;
+            // 
+            // txtLineupOrgHEX
+            // 
+            this.txtLineupOrgHEX.Enabled = false;
+            this.txtLineupOrgHEX.Location = new System.Drawing.Point(6, 452);
+            this.txtLineupOrgHEX.Multiline = true;
+            this.txtLineupOrgHEX.Name = "txtLineupOrgHEX";
+            this.txtLineupOrgHEX.Size = new System.Drawing.Size(260, 101);
+            this.txtLineupOrgHEX.TabIndex = 93;
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -1257,6 +1278,14 @@
             this.groupBox4.TabIndex = 91;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Team Details:";
+            // 
+            // txtModTeamHEX
+            // 
+            this.txtModTeamHEX.Location = new System.Drawing.Point(34, 516);
+            this.txtModTeamHEX.Name = "txtModTeamHEX";
+            this.txtModTeamHEX.Size = new System.Drawing.Size(100, 26);
+            this.txtModTeamHEX.TabIndex = 265;
+            this.txtModTeamHEX.Visible = false;
             // 
             // txtTeamHEX
             // 
@@ -1394,6 +1423,7 @@
             this.toolStripButton1,
             this.toolStripSeparator2,
             this.toolStripButton5,
+            this.toolStripButton6,
             this.toolStripSeparator3,
             this.toolStripButton2,
             this.toolStripButton3,
@@ -1432,6 +1462,17 @@
             this.toolStripButton5.Text = "toolStripButton5";
             this.toolStripButton5.ToolTipText = "Global Player Editor.";
             this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton5_Click);
+            // 
+            // toolStripButton6
+            // 
+            this.toolStripButton6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton6.Enabled = false;
+            this.toolStripButton6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton6.Image")));
+            this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton6.Name = "toolStripButton6";
+            this.toolStripButton6.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton6.Text = "Default fix DB.";
+            this.toolStripButton6.Click += new System.EventHandler(this.toolStripButton6_Click);
             // 
             // toolStripSeparator3
             // 
@@ -1479,7 +1520,8 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statusToolstrip});
+            this.statusToolstrip,
+            this.toolStripProgressBar1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 631);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1035, 22);
@@ -1493,23 +1535,11 @@
             this.statusToolstrip.Name = "statusToolstrip";
             this.statusToolstrip.Size = new System.Drawing.Size(0, 17);
             // 
-            // txtLineupOrgHEX
+            // toolStripProgressBar1
             // 
-            this.txtLineupOrgHEX.Enabled = false;
-            this.txtLineupOrgHEX.Location = new System.Drawing.Point(6, 452);
-            this.txtLineupOrgHEX.Multiline = true;
-            this.txtLineupOrgHEX.Name = "txtLineupOrgHEX";
-            this.txtLineupOrgHEX.Size = new System.Drawing.Size(260, 101);
-            this.txtLineupOrgHEX.TabIndex = 93;
-            // 
-            // txtLineUpModHEX
-            // 
-            this.txtLineUpModHEX.Location = new System.Drawing.Point(12, 474);
-            this.txtLineUpModHEX.Multiline = true;
-            this.txtLineUpModHEX.Name = "txtLineUpModHEX";
-            this.txtLineUpModHEX.Size = new System.Drawing.Size(254, 65);
-            this.txtLineUpModHEX.TabIndex = 94;
-            this.txtLineUpModHEX.Visible = false;
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
+            this.toolStripProgressBar1.Visible = false;
             // 
             // mainDBDataSet
             // 
@@ -1528,13 +1558,9 @@
             // 
             this.tblLineUpsHexTableAdapter.ClearBeforeFill = true;
             // 
-            // txtModTeamHEX
+            // timer1
             // 
-            this.txtModTeamHEX.Location = new System.Drawing.Point(34, 516);
-            this.txtModTeamHEX.Name = "txtModTeamHEX";
-            this.txtModTeamHEX.Size = new System.Drawing.Size(100, 26);
-            this.txtModTeamHEX.TabIndex = 265;
-            this.txtModTeamHEX.Visible = false;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // frmMain
             // 
@@ -1549,7 +1575,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Frans\'s RC4 Editor";
+            this.Text = "Frans\'s RC4 Editor 0.3";
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.pnlApp.ResumeLayout(false);
             this.tbcMain.ResumeLayout(false);
@@ -1718,6 +1744,9 @@
         private System.Windows.Forms.TextBox txtLineupOrgHEX;
         private System.Windows.Forms.TextBox txtLineUpModHEX;
         private System.Windows.Forms.TextBox txtModTeamHEX;
+        private System.Windows.Forms.ToolStripButton toolStripButton6;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

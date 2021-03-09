@@ -228,7 +228,7 @@ namespace RC4Editor
                     }
                     if (txtFitness.Text.Contains('-'))
                     {
-                        fitness = fitness + (Convert.ToInt32(txtFitness.Text.Replace('-', ' ')) * 100);
+                        fitness = fitness - (Convert.ToInt32(txtFitness.Text.Replace('-', ' ')) * 100);
                         if (fitness < 1000) fitness = 1000;
                     }
 
@@ -242,7 +242,7 @@ namespace RC4Editor
                     }
                     if (txtSpeed.Text.Contains('-'))
                     {
-                        speed = speed + (Convert.ToInt32(txtSpeed.Text.Replace('-', ' ')) * 100);
+                        speed = speed - (Convert.ToInt32(txtSpeed.Text.Replace('-', ' ')) * 100);
                         if (speed < 1000) speed = 1000;
                     }
 
@@ -256,7 +256,7 @@ namespace RC4Editor
                     }
                     if (txtAccel.Text.Contains('-'))
                     {
-                        accl = accl + (Convert.ToInt32(txtAccel.Text.Replace('-', ' ')) * 100);
+                        accl = accl - (Convert.ToInt32(txtAccel.Text.Replace('-', ' ')) * 100);
                         if (accl < 1000) accl = 1000;
                     }
                 }
@@ -269,7 +269,7 @@ namespace RC4Editor
                     }
                     if (txtAggr.Text.Contains('-'))
                     {
-                        aggr = aggr + (Convert.ToInt32(txtAggr.Text.Replace('-', ' ')) * 100);
+                        aggr = aggr - (Convert.ToInt32(txtAggr.Text.Replace('-', ' ')) * 100);
                         if (aggr < 1000) aggr = 1000;
                     }
                 }
@@ -282,7 +282,7 @@ namespace RC4Editor
                     }
                     if (txtbrckTackle.Text.Contains('-'))
                     {
-                        btckl = btckl + (Convert.ToInt32(txtbrckTackle.Text.Replace('-', ' ')) * 100);
+                        btckl = btckl - (Convert.ToInt32(txtbrckTackle.Text.Replace('-', ' ')) * 100);
                         if (btckl < 1000) btckl = 1000;
                     }
                 }
@@ -295,7 +295,7 @@ namespace RC4Editor
                     }
                     if (txtTackle.Text.Contains('-'))
                     {
-                        tackle = tackle + (Convert.ToInt32(txtTackle.Text.Replace('-', ' ')) * 100);
+                        tackle = tackle - (Convert.ToInt32(txtTackle.Text.Replace('-', ' ')) * 100);
                         if (tackle < 1000) tackle = 1000;
                     }
                 }
@@ -308,7 +308,7 @@ namespace RC4Editor
                     }
                     if (txtPass.Text.Contains('-'))
                     {
-                        passing = passing + (Convert.ToInt32(txtPass.Text.Replace('-', ' ')) * 100);
+                        passing = passing - (Convert.ToInt32(txtPass.Text.Replace('-', ' ')) * 100);
                         if (passing < 1000) passing = 1000;
                     }
                 }
@@ -321,7 +321,7 @@ namespace RC4Editor
                     }
                     if (txtAgility.Text.Contains('-'))
                     {
-                        agil = agil + (Convert.ToInt32(txtAgility.Text.Replace('-', ' ')) * 100);
+                        agil = agil - (Convert.ToInt32(txtAgility.Text.Replace('-', ' ')) * 100);
                         if (agil < 1000) agil = 1000;
                     }
                 }
@@ -334,7 +334,7 @@ namespace RC4Editor
                     }
                     if (txtOffload.Text.Contains('-'))
                     {
-                        offloading = offloading + (Convert.ToInt32(txtOffload.Text.Replace('-', ' ')) * 100);
+                        offloading = offloading - (Convert.ToInt32(txtOffload.Text.Replace('-', ' ')) * 100);
                         if (offloading < 1000) offloading = 1000;
                     }
                 }
@@ -347,7 +347,7 @@ namespace RC4Editor
                     }
                     if (txtKick.Text.Contains('-'))
                     {
-                        playkick = playkick + (Convert.ToInt32(txtKick.Text.Replace('-', ' ')) * 100);
+                        playkick = playkick - (Convert.ToInt32(txtKick.Text.Replace('-', ' ')) * 100);
                         if (playkick < 1000) playkick = 1000;
                     }
                 }
@@ -360,7 +360,7 @@ namespace RC4Editor
                     }
                     if (txtGoalKick.Text.Contains('-'))
                     {
-                        goalkick = goalkick + (Convert.ToInt32(txtGoalKick.Text.Replace('-', ' ')) * 100);
+                        goalkick = goalkick - (Convert.ToInt32(txtGoalKick.Text.Replace('-', ' ')) * 100);
                         if (goalkick < 1000) goalkick = 1000;
                     }
                 }
@@ -373,7 +373,7 @@ namespace RC4Editor
                     }
                     if (txtCatch.Text.Contains('-'))
                     {
-                        catching = catching + (Convert.ToInt32(txtCatch.Text.Replace('-', ' ')) * 100);
+                        catching = catching - (Convert.ToInt32(txtCatch.Text.Replace('-', ' ')) * 100);
                         if (catching < 1000) catching = 1000;
                     }
                 }
@@ -386,7 +386,7 @@ namespace RC4Editor
                     }
                     if (txtStrenght.Text.Contains('-'))
                     {
-                        strenght = strenght + (Convert.ToInt32(txtStrenght.Text.Replace('-', ' ')) * 100);
+                        strenght = strenght - (Convert.ToInt32(txtStrenght.Text.Replace('-', ' ')) * 100);
                         if (strenght < 1000) strenght = 1000;
                     }
                 }
@@ -399,7 +399,7 @@ namespace RC4Editor
                     }
                     if (txtMental.Text.Contains('-'))
                     {
-                        mental = mental + (Convert.ToInt32(txtMental.Text.Replace('-', ' ')) * 100);
+                        mental = mental - (Convert.ToInt32(txtMental.Text.Replace('-', ' ')) * 100);
                         if (mental < 1000) mental = 1000;
                     }
                 }
@@ -412,7 +412,7 @@ namespace RC4Editor
                     }
                     if (txtJump.Text.Contains('-'))
                     {
-                        jumping = jumping + (Convert.ToInt32(txtJump.Text.Replace('-', ' ')) * 100);
+                        jumping = jumping - (Convert.ToInt32(txtJump.Text.Replace('-', ' ')) * 100);
                         if (jumping < 1000) jumping = 1000;
                     }
                 }
@@ -425,7 +425,7 @@ namespace RC4Editor
                     }
                     if (txtDiscp.Text.Contains('-'))
                     {
-                        discpl = discpl + (Convert.ToInt32(txtDiscp.Text.Replace('-', ' ')) * 100);
+                        discpl = discpl - (Convert.ToInt32(txtDiscp.Text.Replace('-', ' ')) * 100);
                         if (discpl < 1000) discpl = 1000;
                     }
                 }
@@ -475,6 +475,7 @@ namespace RC4Editor
                 {
                     tblPlayersHexTableAdapter1.UpdateQueryModHex(str5, text1);
                     updateDone = true;
+                    this.Close();
 
                 }
 

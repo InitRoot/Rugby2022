@@ -8,16 +8,21 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RC4Editor
 {
+ 
     public partial class frmMain : Form
     {
         String fileName;
         int PendingChanges = 0;
         ArrayList playerIDs = new ArrayList();
+        private Thread workerThread = null;
+
+
         public frmMain()
         {
             InitializeComponent();
@@ -41,6 +46,7 @@ namespace RC4Editor
             toolStripButton2.Enabled = false;
             toolStripButton3.Enabled = false;
             toolStripButton5.Enabled = false;
+            toolStripButton6.Enabled = false;
         }
 
         private void unlockScreen()
@@ -49,6 +55,7 @@ namespace RC4Editor
             toolStripButton2.Enabled = true;
             toolStripButton3.Enabled = true;
             toolStripButton5.Enabled = true;
+            toolStripButton6.Enabled = true;
         }
 
         //Adds nations to our combobox
@@ -235,10 +242,11 @@ namespace RC4Editor
             int posStart = 0;
             byte[] buff = null;
             buff = File.ReadAllBytes(fullFilePath);
-            posStart = Search(buff, StringToByteArray("EA0300000008270602000000000010000000100002000000000010000000100000000000000000000000000000000000000000000000803F000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000E90302007017701738189C18581BBC1B9C1830112413100EFC08A816A41FEC13F00A9C"));
+            posStart = Search(buff, StringToByteArray("EA030000000827060200000000001000000010000200000000001000000010000000000000000000000000000000000000000000000080"));
+            //posStart = posStart + 64;
             // MessageBox.Show(posStart.ToString());
-            posEnd = Search(buff, StringToByteArray("765A000000601806010000000000100000001000000800000002000000010000000000000000803F0000000000000000CDCC0C3F0000803FCDCCCC3ECDCCCC3E0000000000000000000000003333B33E00000000000000009A99"));
-            // MessageBox.Show(posEnd.ToString());
+            posEnd = Search(buff, StringToByteArray("E9030000ED9C78070000000000000000E903EA030400000008000000000000000000000000000204020001020002040002000104070000010000000001576F726C64205275676279204368616D70696F6E7368697000000000000000000000777263"));
+             //MessageBox.Show(posEnd.ToString());
             byte[] slice = Extensions.ArraySlice(buff, posStart, posEnd);
             return slice;
 
@@ -254,8 +262,9 @@ namespace RC4Editor
             posStart = Search(buff, StringToByteArray("0A003C0049445F494E4A5552595F444553435F4E4F534500000000000000000000000000160000003C00960049445F494E4A5552595F444553435F53484F554C444552000000000000000000"));
             posStart = posStart + 76; //we have to adjust as we perform the lookup before the table starts
             //MessageBox.Show(posStart.ToString());
+            //01000000A754785A020000008606795A030000000856775A0400000039077A5AE90300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D000000
             posEnd = Search(buff, StringToByteArray("E90300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000EA0300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000EB0300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000EC0300001E000000EE0200001400000019000000050000001400000014000000C80000000F000000960000000A000000FA00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000ED0300001E000000EE02"));
-            posEnd = posEnd - 776;
+           // posEnd = posEnd - 776;
             //MessageBox.Show(posEnd.ToString());
             byte[] slice = Extensions.ArraySlice(buff, posStart, posEnd);
             return slice;
@@ -272,7 +281,7 @@ namespace RC4Editor
             posStart = posStart + 46; //we have to adjust as we perform the lookup before the table starts
            // MessageBox.Show(posStart.ToString());
             posEnd = Search(buff, StringToByteArray("EA030000000827060200000000001000000010000200000000001000000010000000000000000000000000000000"));
-            posEnd = posEnd - 212;
+            //posEnd = posEnd - 212;
            // MessageBox.Show(posEnd.ToString());
             byte[] slice = Extensions.ArraySlice(buff, posStart, posEnd);
             return slice;
@@ -523,11 +532,11 @@ namespace RC4Editor
             byte[] source = StringToByteArray(InHEX);
             //MessageBox.Show(InHEX);
             //initialise bytes with correct sizes
-            byte[] lineup = new byte[80];
+            byte[] lineup = new byte[90];
             byte[] currentPlayer = new byte[2];
 
             //Copy bytes out of the source
-            Buffer.BlockCopy(source, 564, lineup, 0, 80);
+            Buffer.BlockCopy(source, 564, lineup, 0, 90);
             txtLineupOrgHEX.Text = InHEX;
             //Let's loop
             int byteset = 0;
@@ -555,6 +564,17 @@ namespace RC4Editor
 
         }
 
+        private void defaultPlayers()
+        {
+            string playflName = Directory.GetCurrentDirectory() + @"\Default.tx";
+            string[] lines = File.ReadAllLines(playflName);
+            foreach (string line in lines)
+            {
+                string[] col = line.Split(',');
+                DBReplacePlayerNamebyPlayerID(Convert.ToInt32(col[0]), col[1], col[2]);
+                // process col[0], col[1], col[2]
+            }
+        }
 
         public void loadTeamDetails(string tmHEX)
         {
@@ -567,19 +587,19 @@ namespace RC4Editor
 
             byte[] source = StringToByteArray(tmHEX);
             byte[] bfplateamIDyerID = new byte[2]; //Checked
-            byte[] bfTeamName = new byte[57]; //Checked
+            byte[] bfTeamName = new byte[32]; //Checked
             byte[] bfShortName = new byte[7]; //Checked
 
 
             //Extracts the values from the hex into our byte values
             Buffer.BlockCopy(source, 0, bfplateamIDyerID, 0, 2);
-            Buffer.BlockCopy(source, 148, bfTeamName, 0, 57);
+            Buffer.BlockCopy(source, 148, bfTeamName, 0, 32);
             Buffer.BlockCopy(source, 205, bfShortName, 0, 7);
 
-
+            string tmnamehex = ToHexString(bfTeamName);
             //Converts extracted values to the required formats
             plateamIDyerID = GetLittleEndianIntegerFromByteArray(bfplateamIDyerID);
-            TeamName = HexString2Ascii(ToHexString(bfTeamName)).Replace("\0", string.Empty);
+            TeamName = HexString2Ascii(tmnamehex).Replace("\0", string.Empty);
             ShortName = HexString2Ascii(ToHexString(bfShortName)).Replace("\0", string.Empty);
 
             txtTeamID.Text = plateamIDyerID.ToString();
@@ -750,7 +770,7 @@ namespace RC4Editor
             txtFitness.Text = fitness.ToString();
             txtSpeed.Text = speed.ToString();
             txtAccel.Text = accl.ToString();
-            txtAggr.Text = agil.ToString();
+            txtAgility.Text = agil.ToString();
             if (star == 5000) { chkStar.Checked = true; } else { chkStar.Checked = false; }
             txtAggr.Text = aggr.ToString();
             txtbrckTackle.Text = btckl.ToString();
@@ -795,8 +815,100 @@ namespace RC4Editor
             return HEX;
 
         }
+        public void DBReplacePlayerNamebyPlayerID(int plID, string fname, string lname)
+        {
+            String HEX = "";
 
 
+            if (tblPlayersHexTableAdapter.GetDataByPlayerID(plID).Count < 2)
+            {
+                foreach (DataRow dr in tblPlayersHexTableAdapter.GetDataByPlayerID(plID))
+                {
+                    HEX = (dr.ItemArray[1].ToString());
+
+                    string text1 = HEX; //original
+                    string text2 = plID.ToString();
+
+                    fname = fname.Replace("-", "");
+                    lname = lname.Replace("-", "");
+
+                    string hex1 = this.ConvertStringToHex(fname, 40);
+                    string hex2 = this.ConvertStringToHex(lname, 40);
+
+                    string str5 = "";
+
+                    if (fname.Contains("Dummy"))
+                    {
+                        fname = "Fake";
+                        lname = "Player";
+
+                        string hexLittleEndian3 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian4 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian5 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian6 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian7 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian8 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian9 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian10 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian11 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian12 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian13 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian14 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian15 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian16 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian17 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian18 = this.decimalToHexLittleEndian((int)Convert.ToInt16("2000"), 2);
+                        string hexLittleEndian19 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.nationStrToID("Vanuatu")), 2);
+
+                        str5 =
+                        text1.Remove(440, 40).Insert(440, this.ConvertStringToHex(fname, 40)) //name
+                        .Remove(490, 40).Insert(490, this.ConvertStringToHex(lname, 40)) //surname
+                        .Remove(216, 4).Insert(216, hexLittleEndian3) //fitness
+                        .Remove(224, 4).Insert(224, hexLittleEndian4) //speed
+                        .Remove(228, 4).Insert(228, hexLittleEndian5) //acceleration
+                        .Remove(220, 4).Insert(220, hexLittleEndian6) //agility
+                        .Remove(232, 4).Insert(232, hexLittleEndian7) //aggresion
+                        .Remove(240, 4).Insert(240, hexLittleEndian8) //break tackle
+                        .Remove(236, 4).Insert(236, hexLittleEndian9) //tackle
+                        .Remove(244, 4).Insert(244, hexLittleEndian10) //passing
+                        .Remove(248, 4).Insert(248, hexLittleEndian11) //offloading
+                        .Remove(252, 4).Insert(252, hexLittleEndian12) //general kicking
+                        .Remove(256, 4).Insert(256, hexLittleEndian13) //goal kicking
+                        .Remove(260, 4).Insert(260, hexLittleEndian14) //catching
+                        .Remove(264, 4).Insert(264, hexLittleEndian15) //strengh
+                        .Remove(268, 4).Insert(268, hexLittleEndian16) //mental agility
+                        .Remove(272, 4).Insert(272, hexLittleEndian17) //jumping
+                        .Remove(276, 4).Insert(276, hexLittleEndian18) //discipline
+                        .Remove(208, 4).Insert(208, hexLittleEndian19); //nationality
+
+
+                    }
+                    else
+                    {
+                        str5 =
+                       text1.Remove(440, 40).Insert(440, hex1) //name
+                       .Remove(490, 40).Insert(490, hex2);//surname
+                    }
+
+                    if (str5.Length != HEX.Length)
+                    {
+                        int num = (int)MessageBox.Show("Error - Hex sizes do not match.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        tblPlayersHexTableAdapter.UpdateQueryModHex(str5, text1);
+                        PendingChanges = PendingChanges + 1;
+                        statusToolstrip.Text = PendingChanges.ToString() + " changes pending to be written to DB!!";
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Mutliple records matched. Error! Contact developer!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); ;
+            }
+
+
+        }
         public String DBGetPlayerNamebyPlayerID(int plID)
         {
             String HEX = "";
@@ -895,16 +1007,11 @@ namespace RC4Editor
             string text1 = this.txtTeamHEX.Text; //original
             this.txtTeamName.Text = this.txtTeamName.Text.Replace("-", "");
             this.txtShortName.Text = this.txtShortName.Text.Replace("-", "");
-            string hex1 = this.ConvertStringToHex(this.txtTeamName.Text, 57);
+            string hex1 = this.ConvertStringToHex(this.txtTeamName.Text, 32);
             string hex2 = this.ConvertStringToHex(this.txtShortName.Text, 7);
 
-            //Extracts the values from the hex into our byte values
-            // Buffer.BlockCopy(source, 0, bfplateamIDyerID, 0, 2);
-            // Buffer.BlockCopy(source, 148, bfTeamName, 0, 57);
-            //  Buffer.BlockCopy(source, 205, bfShortName, 0, 7);
-
             string str5 =
-               text1.Remove(296, 57).Insert(296, hex1) //name
+               text1.Remove(296, 32).Insert(296, hex1) //name
                .Remove(410, 7).Insert(410, hex2); //surname
               
  
@@ -938,7 +1045,8 @@ namespace RC4Editor
                 //MessageBox.Show(playerID);
                 if (playerID == "0")
                 {
-
+                    string hexLittleEndianplayID = "0000";
+                    moddedHex = modlineupHEX.Remove(byteset, 4).Insert(byteset, hexLittleEndianplayID);
                 }
                 else
                 {
@@ -948,6 +1056,7 @@ namespace RC4Editor
                 }
                 byteset += 4;
                 i = i++;
+                modlineupHEX = moddedHex;
 
             }
 
@@ -966,108 +1075,115 @@ namespace RC4Editor
         
         public void savePlayerHEX()
         {
-            if (this.chkDummyPlayer.Checked)
+            if (txtPlayID.Text != "1002")
             {
-                this.txtName.Text = "Fake";
-                this.txtSurname.Text = "Player";
-                this.txtHeight.Text = "170";
-                this.txtWeight.Text = "70";
-                this.txtAgility.Text = "2000";
-                this.chkLocked.Checked = false;
-                this.txtFitness.Text = "2000";
-                this.txtSpeed.Text = "2000";
-                this.txtAccel.Text = "2000";
-                this.txtAggr.Text = "2000";
-                this.chkStar.Checked = false;
-                this.txtAggr.Text = "2000";
-                this.txtbrckTackle.Text = "2000";
-                this.txtTackle.Text = "2000";
-                this.txtPass.Text = "2000";
-                this.txtOffload.Text = "2000";
-                this.txtKick.Text = "2000";
-                this.txtGoalKick.Text = "2000";
-                this.txtCatch.Text = "2000";
-                this.txtStrenght.Text = "2000";
-                this.txtMental.Text = "2000";
-                this.txtJump.Text = "2000";
-                this.txtDiscp.Text = "2000";
-                this.cmbNations.SelectedItem = (object)"Vanuatu";
-            }
-            string text1 = this.txtOrgHEX.Text; //original
+                if (this.chkDummyPlayer.Checked)
+                {
+                    this.txtName.Text = "Fake";
+                    this.txtSurname.Text = "Player";
+                    this.txtHeight.Text = "170";
+                    this.txtWeight.Text = "70";
+                    this.txtAgility.Text = "2000";
+                    this.chkLocked.Checked = false;
+                    this.txtFitness.Text = "2000";
+                    this.txtSpeed.Text = "2000";
+                    this.txtAccel.Text = "2000";
+                    this.txtAggr.Text = "2000";
+                    this.chkStar.Checked = false;
+                    this.txtAggr.Text = "2000";
+                    this.txtbrckTackle.Text = "2000";
+                    this.txtTackle.Text = "2000";
+                    this.txtPass.Text = "2000";
+                    this.txtOffload.Text = "2000";
+                    this.txtKick.Text = "2000";
+                    this.txtGoalKick.Text = "2000";
+                    this.txtCatch.Text = "2000";
+                    this.txtStrenght.Text = "2000";
+                    this.txtMental.Text = "2000";
+                    this.txtJump.Text = "2000";
+                    this.txtDiscp.Text = "2000";
+                    this.cmbNations.SelectedItem = (object)"Vanuatu";
+                }
+                string text1 = this.txtOrgHEX.Text; //original
 
-            string text2 = this.txtPlayID.Text;
-            this.txtName.Text = this.txtName.Text.Replace("-", "");
-            this.txtSurname.Text = this.txtSurname.Text.Replace("-", "");
-            string hex1 = this.ConvertStringToHex(this.txtName.Text, 25);
-            string hex2 = this.ConvertStringToHex(this.txtSurname.Text, 25);
-            // string hexLittleEndian1 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtHeight.Text), 1);
-            // string hexLittleEndian2 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtWeight.Text), 1);
-            //string str1 = !this.chkLocked.Checked ? "00" : "01";2
-            string hexLittleEndian3 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFitness.Text), 2);
-            string hexLittleEndian4 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtSpeed.Text), 2);
-            string hexLittleEndian5 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtAccel.Text), 2);
-            string hexLittleEndian6 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtAgility.Text), 2);
-            string str2 = !this.chkStar.Checked ? "0000" : "8813";
-            string hexLittleEndian7 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtAggr.Text), 2);
-            string hexLittleEndian8 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtbrckTackle.Text), 2);
-            string hexLittleEndian9 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtTackle.Text), 2);
-            string hexLittleEndian10 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtPass.Text), 2);
-            string hexLittleEndian11 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtOffload.Text), 2);
-            string hexLittleEndian12 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtKick.Text), 2);
-            string hexLittleEndian13 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtGoalKick.Text), 2);
-            string hexLittleEndian14 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtCatch.Text), 2);
-            string hexLittleEndian15 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtStrenght.Text), 2);
-            string hexLittleEndian16 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtMental.Text), 2);
-            string hexLittleEndian17 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtJump.Text), 2);
-            string hexLittleEndian18 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtDiscp.Text), 2);
-            string hexLittleEndian19 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.nationStrToID(this.cmbNations.SelectedItem.ToString())), 2);
-            //string hexLittleEndian20 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtHeadID.Text), 1);
-            string str3 = this.RCPOStoID(this.cmbPositions.SelectedItem.ToString());
-            string str4 = this.RCPOStoID(this.cmbPositions7.SelectedItem.ToString());
-            //string hexLittleEndian21 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtIntBoot.Text) - 1, 1);
-            //string hexLittleEndian22 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtClubBoot.Text) - 1, 1);
-            //string hexLittleEndian23 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFaceID.Text), 2);
-            //string hexLittleEndian24 = this.decimalToHexLittleEndian(Convert.ToInt32(this.txtHair.Text), 2);
-            //string hexLittleEndian25 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFacialHair.Text), 2);
-            //string hexLittleEndian26 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtSkin.Text), 1);
-            string str9 = this.RCPOStoID(this.cmbSecondaryPositions.SelectedItem.ToString());
+                string text2 = this.txtPlayID.Text;
+                this.txtName.Text = this.txtName.Text.Replace("-", "");
+                this.txtSurname.Text = this.txtSurname.Text.Replace("-", "");
+                string hex1 = this.ConvertStringToHex(this.txtName.Text, 45);
+                string hex2 = this.ConvertStringToHex(this.txtSurname.Text, 45);
+                // string hexLittleEndian1 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtHeight.Text), 1);
+                // string hexLittleEndian2 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtWeight.Text), 1);
+                //string str1 = !this.chkLocked.Checked ? "00" : "01";2
+                string hexLittleEndian3 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFitness.Text), 2);
+                string hexLittleEndian4 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtSpeed.Text), 2);
+                string hexLittleEndian5 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtAccel.Text), 2);
+                string hexLittleEndian6 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtAgility.Text), 2);
+                string str2 = !this.chkStar.Checked ? "0000" : "8813";
+                string hexLittleEndian7 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtAggr.Text), 2);
+                string hexLittleEndian8 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtbrckTackle.Text), 2);
+                string hexLittleEndian9 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtTackle.Text), 2);
+                string hexLittleEndian10 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtPass.Text), 2);
+                string hexLittleEndian11 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtOffload.Text), 2);
+                string hexLittleEndian12 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtKick.Text), 2);
+                string hexLittleEndian13 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtGoalKick.Text), 2);
+                string hexLittleEndian14 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtCatch.Text), 2);
+                string hexLittleEndian15 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtStrenght.Text), 2);
+                string hexLittleEndian16 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtMental.Text), 2);
+                string hexLittleEndian17 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtJump.Text), 2);
+                string hexLittleEndian18 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtDiscp.Text), 2);
+                string hexLittleEndian19 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.nationStrToID(this.cmbNations.SelectedItem.ToString())), 2);
+                //string hexLittleEndian20 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtHeadID.Text), 1);
+                string str3 = this.RCPOStoID(this.cmbPositions.SelectedItem.ToString());
+                string str4 = this.RCPOStoID(this.cmbPositions7.SelectedItem.ToString());
+                //string hexLittleEndian21 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtIntBoot.Text) - 1, 1);
+                //string hexLittleEndian22 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtClubBoot.Text) - 1, 1);
+                //string hexLittleEndian23 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFaceID.Text), 2);
+                //string hexLittleEndian24 = this.decimalToHexLittleEndian(Convert.ToInt32(this.txtHair.Text), 2);
+                //string hexLittleEndian25 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFacialHair.Text), 2);
+                //string hexLittleEndian26 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtSkin.Text), 1);
+                string str9 = this.RCPOStoID(this.cmbSecondaryPositions.SelectedItem.ToString());
 
-            string str5 =
-                text1.Remove(440, 25).Insert(440, hex1) //name
-                .Remove(490, 25).Insert(490, hex2) //surname
-                .Remove(216, 4).Insert(216, hexLittleEndian3) //fitness
-                .Remove(224, 4).Insert(224, hexLittleEndian4) //speed
-                .Remove(228, 4).Insert(228, hexLittleEndian5) //acceleration
-                .Remove(220, 4).Insert(220, hexLittleEndian6) //agility
-                .Remove(284, 4).Insert(284, str2) //star
-                .Remove(232, 4).Insert(232, hexLittleEndian7) //aggresion
-                .Remove(240, 4).Insert(240, hexLittleEndian8) //break tackle
-                .Remove(236, 4).Insert(236, hexLittleEndian9) //tackle
-                .Remove(244, 4).Insert(244, hexLittleEndian10) //passing
-                .Remove(248, 4).Insert(248, hexLittleEndian11) //offloading
-                .Remove(252, 4).Insert(252, hexLittleEndian12) //general kicking
-                .Remove(256, 4).Insert(256, hexLittleEndian13) //goal kicking
-                .Remove(260, 4).Insert(260, hexLittleEndian14) //catching
-                .Remove(264, 4).Insert(264, hexLittleEndian15) //strengh
-                .Remove(268, 4).Insert(268, hexLittleEndian16) //mental agility
-                .Remove(272, 4).Insert(272, hexLittleEndian17) //jumping
-                .Remove(276, 4).Insert(276, hexLittleEndian18) //discipline
-                .Remove(208, 4).Insert(208, hexLittleEndian19) //nationality
-                .Remove(16, 4).Insert(16, str3) //position15sp
-                .Remove(40, 4).Insert(40, str4) //position7sp
-                .Remove(24, 4).Insert(24, str4); //secondpos15s
+                string str5 =
+                    text1.Remove(440, 45).Insert(440, hex1) //name
+                    .Remove(490, 45).Insert(490, hex2) //surname
+                    .Remove(216, 4).Insert(216, hexLittleEndian3) //fitness
+                    .Remove(224, 4).Insert(224, hexLittleEndian4) //speed
+                    .Remove(228, 4).Insert(228, hexLittleEndian5) //acceleration
+                    .Remove(220, 4).Insert(220, hexLittleEndian6) //agility
+                    .Remove(284, 4).Insert(284, str2) //star
+                    .Remove(232, 4).Insert(232, hexLittleEndian7) //aggresion
+                    .Remove(240, 4).Insert(240, hexLittleEndian8) //break tackle
+                    .Remove(236, 4).Insert(236, hexLittleEndian9) //tackle
+                    .Remove(244, 4).Insert(244, hexLittleEndian10) //passing
+                    .Remove(248, 4).Insert(248, hexLittleEndian11) //offloading
+                    .Remove(252, 4).Insert(252, hexLittleEndian12) //general kicking
+                    .Remove(256, 4).Insert(256, hexLittleEndian13) //goal kicking
+                    .Remove(260, 4).Insert(260, hexLittleEndian14) //catching
+                    .Remove(264, 4).Insert(264, hexLittleEndian15) //strengh
+                    .Remove(268, 4).Insert(268, hexLittleEndian16) //mental agility
+                    .Remove(272, 4).Insert(272, hexLittleEndian17) //jumping
+                    .Remove(276, 4).Insert(276, hexLittleEndian18) //discipline
+                    .Remove(208, 4).Insert(208, hexLittleEndian19) //nationality
+                    .Remove(16, 4).Insert(16, str3) //position15sp
+                    .Remove(40, 4).Insert(40, str4); //position7sp
+                   // .Remove(20, 4).Insert(24, str9); //secondpos15s
 
-            this.txtChangedHex.Text = str5;
-            if (this.txtChangedHex.TextLength != this.txtOrgHEX.TextLength)
-            {
-                int num = (int)MessageBox.Show("Error - Hex sizes do not match.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.txtChangedHex.Text = str5;
+                if (this.txtChangedHex.TextLength != this.txtOrgHEX.TextLength)
+                {
+                    int num = (int)MessageBox.Show("Error - Hex sizes do not match.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    tblPlayersHexTableAdapter.UpdateQueryModHex(str5, text1);
+                    PendingChanges = PendingChanges + 1;
+                    statusToolstrip.Text = PendingChanges.ToString() + " changes pending to be written to DB!!";
+
+                }
             }
             else
             {
-                tblPlayersHexTableAdapter.UpdateQueryModHex(str5, text1);
-                PendingChanges = PendingChanges + 1;
-                statusToolstrip.Text = PendingChanges.ToString() + " changes pending to be written to DB!!";
-
+                MessageBox.Show("For the editor to work you cannot save over the first player in the DB. Sorry...");
             }
         }
 
@@ -1637,11 +1753,14 @@ namespace RC4Editor
             foreach (object model in objListViewPlayers.SelectedObjects)
                 sb.AppendLine(olvColumn.GetStringValue(model));
             var selectedCellsAsText = sb.ToString();
-            
+            if (selectedCellsAsText != "")
+                {
+                string playerHEX = DBGetPlayerHEXbyID(Convert.ToInt32(selectedCellsAsText));
+                populatePlayerDetails(playerHEX);
+                txtOrgHEX.Text = playerHEX;
+            }
            // MessageBox.Show(selectedCellsAsText);
-            string playerHEX = DBGetPlayerHEXbyID(Convert.ToInt32(selectedCellsAsText));
-            populatePlayerDetails(playerHEX);
-            txtOrgHEX.Text = playerHEX;
+
         }
 
         private void textBox7_TextChanged(object sender, EventArgs e)
@@ -1651,7 +1770,9 @@ namespace RC4Editor
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
+
             loadFile();
+       
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -1793,6 +1914,30 @@ namespace RC4Editor
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void toolStripButton6_Click(object sender, EventArgs e)
+        {
+            defaultPlayers();
+        }
+
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (workerThread == null)
+            {
+                timer1.Stop();
+                return;
+            }
+
+            // still works: exiting
+            if (workerThread.IsAlive)
+                return;
+
+            // finished
+            timer1.Stop();
+            toolStripProgressBar1.Visible = false;
+            workerThread = null;
         }
     }
 }
