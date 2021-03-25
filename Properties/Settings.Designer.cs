@@ -27,10 +27,206 @@ namespace RC4Editor.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\MainDB.mdf;In" +
-            "tegrated Security=True;Connect Timeout=30")]
+            "tegrated Security=True;Connect Timeout=30;Context Connection=False")]
         public string MainDBConnectionString {
             get {
                 return ((string)(this["MainDBConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("EA0300000008270602000000000010000000100002000000000010000000100000000000000000000" +
+            "00000000000000000000000000080")]
+        public string PlayStart {
+            get {
+                return ((string)(this["PlayStart"]));
+            }
+            set {
+                this["PlayStart"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("E9030000ED9C78070000000000000000E903")]
+        public string PlayEnd {
+            get {
+                return ((string)(this["PlayEnd"]));
+            }
+            set {
+                this["PlayEnd"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0A003C0049445F494E4A5552595F444553435F4E4F534500000000000000000000000000160000003" +
+            "C00960049445F494E4A5552595F444553435F53484F554C444552000000000000000000")]
+        public string LinStart {
+            get {
+                return ((string)(this["LinStart"]));
+            }
+            set {
+                this["LinStart"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"E90300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000EA0300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000EB0300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000EC0300001E000000EE0200001400000019000000050000001400000014000000C80000000F000000960000000A000000FA00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000ED0300001E000000EE02")]
+        public string LinEnd {
+            get {
+                return ((string)(this["LinEnd"]));
+            }
+            set {
+                this["LinEnd"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("FF005553412057377300000000000000000000000000000000000000000000000000723773775F757" +
+            "36100000000")]
+        public string TeamsStart {
+            get {
+                return ((string)(this["TeamsStart"]));
+            }
+            set {
+                this["TeamsStart"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("EA0300000008270602000000000010000000100002000000000010000000100000000000000000000" +
+            "00000000000")]
+        public string TeamsEnd {
+            get {
+                return ((string)(this["TeamsEnd"]));
+            }
+            set {
+                this["TeamsEnd"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("E3030000240124010100479C581342770000005F0A")]
+        public string KitsStart {
+            get {
+                return ((string)(this["KitsStart"]));
+            }
+            set {
+                this["KitsStart"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("E90300000018F50500005089E90300002D00000000000153696D6F6E2043756C68616E6500000000")]
+        public string KitsEnd {
+            get {
+                return ((string)(this["KitsEnd"]));
+            }
+            set {
+                this["KitsEnd"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int PlayStartInt {
+            get {
+                return ((int)(this["PlayStartInt"]));
+            }
+            set {
+                this["PlayStartInt"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int PlayEndInt {
+            get {
+                return ((int)(this["PlayEndInt"]));
+            }
+            set {
+                this["PlayEndInt"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("76")]
+        public int LinStartInt {
+            get {
+                return ((int)(this["LinStartInt"]));
+            }
+            set {
+                this["LinStartInt"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LinEndInt {
+            get {
+                return ((int)(this["LinEndInt"]));
+            }
+            set {
+                this["LinEndInt"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("46")]
+        public int TeamsStartInt {
+            get {
+                return ((int)(this["TeamsStartInt"]));
+            }
+            set {
+                this["TeamsStartInt"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int TeamsEndInt {
+            get {
+                return ((int)(this["TeamsEndInt"]));
+            }
+            set {
+                this["TeamsEndInt"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int KitsStartInt {
+            get {
+                return ((int)(this["KitsStartInt"]));
+            }
+            set {
+                this["KitsStartInt"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int KitsEndint {
+            get {
+                return ((int)(this["KitsEndint"]));
+            }
+            set {
+                this["KitsEndint"] = value;
             }
         }
     }

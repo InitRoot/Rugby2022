@@ -5,10 +5,58 @@
     <Setting Name="MainDBConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\MainDB.mdf;Integrated Security=True;Connect Timeout=30&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\MainDB.mdf;Integrated Security=True;Connect Timeout=30;Context Connection=False&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\MainDB.mdf;Integrated Security=True;Connect Timeout=30</Value>
+      <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\MainDB.mdf;Integrated Security=True;Connect Timeout=30;Context Connection=False</Value>
+    </Setting>
+    <Setting Name="PlayStart" Type="System.String" Scope="User">
+      <Value Profile="(Default)">EA030000000827060200000000001000000010000200000000001000000010000000000000000000000000000000000000000000000080</Value>
+    </Setting>
+    <Setting Name="PlayEnd" Type="System.String" Scope="User">
+      <Value Profile="(Default)">E9030000ED9C78070000000000000000E903</Value>
+    </Setting>
+    <Setting Name="LinStart" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0A003C0049445F494E4A5552595F444553435F4E4F534500000000000000000000000000160000003C00960049445F494E4A5552595F444553435F53484F554C444552000000000000000000</Value>
+    </Setting>
+    <Setting Name="LinEnd" Type="System.String" Scope="User">
+      <Value Profile="(Default)">E90300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000EA0300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000EB0300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000EC0300001E000000EE0200001400000019000000050000001400000014000000C80000000F000000960000000A000000FA00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000ED0300001E000000EE02</Value>
+    </Setting>
+    <Setting Name="TeamsStart" Type="System.String" Scope="User">
+      <Value Profile="(Default)">FF005553412057377300000000000000000000000000000000000000000000000000723773775F75736100000000</Value>
+    </Setting>
+    <Setting Name="TeamsEnd" Type="System.String" Scope="User">
+      <Value Profile="(Default)">EA030000000827060200000000001000000010000200000000001000000010000000000000000000000000000000</Value>
+    </Setting>
+    <Setting Name="KitsStart" Type="System.String" Scope="User">
+      <Value Profile="(Default)">E3030000240124010100479C581342770000005F0A</Value>
+    </Setting>
+    <Setting Name="KitsEnd" Type="System.String" Scope="User">
+      <Value Profile="(Default)">E90300000018F50500005089E90300002D00000000000153696D6F6E2043756C68616E6500000000</Value>
+    </Setting>
+    <Setting Name="PlayStartInt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="PlayEndInt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="LinStartInt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">76</Value>
+    </Setting>
+    <Setting Name="LinEndInt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="TeamsStartInt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">46</Value>
+    </Setting>
+    <Setting Name="TeamsEndInt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="KitsStartInt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="KitsEndint" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

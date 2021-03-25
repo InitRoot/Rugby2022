@@ -144,6 +144,48 @@
             this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.TeamIndex2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.label17 = new System.Windows.Forms.Label();
+            this.tbpKits = new System.Windows.Forms.TabPage();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.txtNumberID = new System.Windows.Forms.TextBox();
+            this.label44 = new System.Windows.Forms.Label();
+            this.label39 = new System.Windows.Forms.Label();
+            this.txtCollarID = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.txtKitHex = new System.Windows.Forms.TextBox();
+            this.txtkitName = new System.Windows.Forms.TextBox();
+            this.txtkitID = new System.Windows.Forms.TextBox();
+            this.label40 = new System.Windows.Forms.Label();
+            this.label41 = new System.Windows.Forms.Label();
+            this.objKitTeamView = new BrightIdeasSoftware.ObjectListView();
+            this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn15 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.KitIndex = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.label20 = new System.Windows.Forms.Label();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.txtLinStartOffInt = new System.Windows.Forms.TextBox();
+            this.txtLinEndOffInt = new System.Windows.Forms.TextBox();
+            this.txtKitsEndOffInt = new System.Windows.Forms.TextBox();
+            this.txtKitsStartOffInt = new System.Windows.Forms.TextBox();
+            this.txtTeamEndOffInt = new System.Windows.Forms.TextBox();
+            this.txtTeamStartOffInt = new System.Windows.Forms.TextBox();
+            this.txtPlayEndOffInt = new System.Windows.Forms.TextBox();
+            this.txtPlayStartOffInt = new System.Windows.Forms.TextBox();
+            this.txtLinEndOff = new System.Windows.Forms.TextBox();
+            this.txtLinStartOff = new System.Windows.Forms.TextBox();
+            this.txtKitsEndOff = new System.Windows.Forms.TextBox();
+            this.txtKitsStartOff = new System.Windows.Forms.TextBox();
+            this.txtTeamEndOff = new System.Windows.Forms.TextBox();
+            this.txtTeamStartOff = new System.Windows.Forms.TextBox();
+            this.txtPlayEndOff = new System.Windows.Forms.TextBox();
+            this.label50 = new System.Windows.Forms.Label();
+            this.label49 = new System.Windows.Forms.Label();
+            this.label48 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.txtPlayStartOff = new System.Windows.Forms.TextBox();
+            this.label47 = new System.Windows.Forms.Label();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -157,11 +199,21 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusToolstrip = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.mainDBDataSet = new RC4Editor.MainDBDataSet();
             this.tblPlayersHexTableAdapter = new RC4Editor.MainDBDataSetTableAdapters.tblPlayersHexTableAdapter();
             this.tblTeamsHexTableAdapter = new RC4Editor.MainDBDataSetTableAdapters.tblTeamsHexTableAdapter();
             this.tblLineUpsHexTableAdapter = new RC4Editor.MainDBDataSetTableAdapters.tblLineUpsHexTableAdapter();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.tblKitsHexTableAdapter = new RC4Editor.MainDBDataSetTableAdapters.tblKitsHexTableAdapter();
+            this.label45 = new System.Windows.Forms.Label();
+            this.label51 = new System.Windows.Forms.Label();
+            this.label52 = new System.Windows.Forms.Label();
+            this.label53 = new System.Windows.Forms.Label();
+            this.label54 = new System.Windows.Forms.Label();
+            this.label55 = new System.Windows.Forms.Label();
+            this.txtLinAtt = new System.Windows.Forms.TextBox();
+            this.txtLinMid = new System.Windows.Forms.TextBox();
+            this.txtLinDef = new System.Windows.Forms.TextBox();
             this.pnlApp.SuspendLayout();
             this.tbcMain.SuspendLayout();
             this.tbpPlayers.SuspendLayout();
@@ -178,6 +230,11 @@
             this.tbpTeams.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objListViewTeams)).BeginInit();
+            this.tbpKits.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.objKitTeamView)).BeginInit();
+            this.tabPage1.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainDBDataSet)).BeginInit();
@@ -196,6 +253,8 @@
             this.tbcMain.Controls.Add(this.tbpPlayers);
             this.tbcMain.Controls.Add(this.tbpLineups);
             this.tbcMain.Controls.Add(this.tbpTeams);
+            this.tbcMain.Controls.Add(this.tbpKits);
+            this.tbcMain.Controls.Add(this.tabPage1);
             this.tbcMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbcMain.Location = new System.Drawing.Point(0, 0);
             this.tbcMain.Name = "tbcMain";
@@ -305,6 +364,7 @@
             // 
             // cmbSecondaryPositions
             // 
+            this.cmbSecondaryPositions.Enabled = false;
             this.cmbSecondaryPositions.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbSecondaryPositions.FormattingEnabled = true;
             this.cmbSecondaryPositions.Location = new System.Drawing.Point(296, 25);
@@ -1263,6 +1323,15 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.txtLinDef);
+            this.groupBox4.Controls.Add(this.txtLinMid);
+            this.groupBox4.Controls.Add(this.txtLinAtt);
+            this.groupBox4.Controls.Add(this.label55);
+            this.groupBox4.Controls.Add(this.label54);
+            this.groupBox4.Controls.Add(this.label53);
+            this.groupBox4.Controls.Add(this.label52);
+            this.groupBox4.Controls.Add(this.label51);
+            this.groupBox4.Controls.Add(this.label45);
             this.groupBox4.Controls.Add(this.txtModTeamHEX);
             this.groupBox4.Controls.Add(this.txtTeamHEX);
             this.groupBox4.Controls.Add(this.txtShortName);
@@ -1300,7 +1369,7 @@
             // txtShortName
             // 
             this.txtShortName.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtShortName.Location = new System.Drawing.Point(437, 27);
+            this.txtShortName.Location = new System.Drawing.Point(437, 45);
             this.txtShortName.MaxLength = 3;
             this.txtShortName.Name = "txtShortName";
             this.txtShortName.Size = new System.Drawing.Size(69, 22);
@@ -1309,7 +1378,7 @@
             // txtTeamName
             // 
             this.txtTeamName.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTeamName.Location = new System.Drawing.Point(194, 27);
+            this.txtTeamName.Location = new System.Drawing.Point(194, 45);
             this.txtTeamName.MaxLength = 20;
             this.txtTeamName.Name = "txtTeamName";
             this.txtTeamName.Size = new System.Drawing.Size(164, 22);
@@ -1319,7 +1388,7 @@
             // 
             this.txtTeamID.Enabled = false;
             this.txtTeamID.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTeamID.Location = new System.Drawing.Point(68, 27);
+            this.txtTeamID.Location = new System.Drawing.Point(68, 45);
             this.txtTeamID.Name = "txtTeamID";
             this.txtTeamID.Size = new System.Drawing.Size(66, 22);
             this.txtTeamID.TabIndex = 261;
@@ -1328,7 +1397,7 @@
             // 
             this.label36.AutoSize = true;
             this.label36.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label36.Location = new System.Drawing.Point(362, 31);
+            this.label36.Location = new System.Drawing.Point(362, 49);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(70, 14);
             this.label36.TabIndex = 260;
@@ -1338,7 +1407,7 @@
             // 
             this.label37.AutoSize = true;
             this.label37.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label37.Location = new System.Drawing.Point(149, 31);
+            this.label37.Location = new System.Drawing.Point(149, 49);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(42, 14);
             this.label37.TabIndex = 259;
@@ -1348,7 +1417,7 @@
             // 
             this.label38.AutoSize = true;
             this.label38.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label38.Location = new System.Drawing.Point(12, 31);
+            this.label38.Location = new System.Drawing.Point(12, 49);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(51, 14);
             this.label38.TabIndex = 258;
@@ -1415,6 +1484,449 @@
             this.label17.Size = new System.Drawing.Size(106, 18);
             this.label17.TabIndex = 89;
             this.label17.Text = "Team Selection:";
+            // 
+            // tbpKits
+            // 
+            this.tbpKits.Controls.Add(this.groupBox5);
+            this.tbpKits.Controls.Add(this.objKitTeamView);
+            this.tbpKits.Controls.Add(this.label20);
+            this.tbpKits.Location = new System.Drawing.Point(4, 22);
+            this.tbpKits.Name = "tbpKits";
+            this.tbpKits.Padding = new System.Windows.Forms.Padding(3);
+            this.tbpKits.Size = new System.Drawing.Size(1027, 568);
+            this.tbpKits.TabIndex = 3;
+            this.tbpKits.Text = "Kits Editor";
+            this.tbpKits.UseVisualStyleBackColor = true;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.txtNumberID);
+            this.groupBox5.Controls.Add(this.label44);
+            this.groupBox5.Controls.Add(this.label39);
+            this.groupBox5.Controls.Add(this.txtCollarID);
+            this.groupBox5.Controls.Add(this.label21);
+            this.groupBox5.Controls.Add(this.textBox3);
+            this.groupBox5.Controls.Add(this.txtKitHex);
+            this.groupBox5.Controls.Add(this.txtkitName);
+            this.groupBox5.Controls.Add(this.txtkitID);
+            this.groupBox5.Controls.Add(this.label40);
+            this.groupBox5.Controls.Add(this.label41);
+            this.groupBox5.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox5.Location = new System.Drawing.Point(250, 5);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(769, 559);
+            this.groupBox5.TabIndex = 92;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Kit Editor:";
+            // 
+            // txtNumberID
+            // 
+            this.txtNumberID.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNumberID.Location = new System.Drawing.Point(231, 66);
+            this.txtNumberID.MaxLength = 4;
+            this.txtNumberID.Name = "txtNumberID";
+            this.txtNumberID.Size = new System.Drawing.Size(69, 22);
+            this.txtNumberID.TabIndex = 270;
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label44.Location = new System.Drawing.Point(146, 71);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(78, 14);
+            this.label44.TabIndex = 269;
+            this.label44.Text = "StripNumber:";
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label39.Location = new System.Drawing.Point(65, 91);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(47, 135);
+            this.label39.TabIndex = 268;
+            this.label39.Text = "00=adi\r\n01=can\r\n02=koo\r\n03=kuk\r\n04=lio\r\n05=lop\r\n06=nik\r\n07=isc\r\n08=tsh";
+            // 
+            // txtCollarID
+            // 
+            this.txtCollarID.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCollarID.Location = new System.Drawing.Point(67, 66);
+            this.txtCollarID.MaxLength = 2;
+            this.txtCollarID.Name = "txtCollarID";
+            this.txtCollarID.Size = new System.Drawing.Size(69, 22);
+            this.txtCollarID.TabIndex = 267;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(13, 71);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(42, 14);
+            this.label21.TabIndex = 266;
+            this.label21.Text = "Collar:";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(15, 365);
+            this.textBox3.Multiline = true;
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(748, 103);
+            this.textBox3.TabIndex = 265;
+            this.textBox3.Visible = false;
+            // 
+            // txtKitHex
+            // 
+            this.txtKitHex.Enabled = false;
+            this.txtKitHex.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtKitHex.Location = new System.Drawing.Point(15, 486);
+            this.txtKitHex.Multiline = true;
+            this.txtKitHex.Name = "txtKitHex";
+            this.txtKitHex.Size = new System.Drawing.Size(748, 67);
+            this.txtKitHex.TabIndex = 264;
+            // 
+            // txtkitName
+            // 
+            this.txtkitName.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtkitName.Location = new System.Drawing.Point(231, 27);
+            this.txtkitName.MaxLength = 20;
+            this.txtkitName.Name = "txtkitName";
+            this.txtkitName.Size = new System.Drawing.Size(164, 22);
+            this.txtkitName.TabIndex = 262;
+            // 
+            // txtkitID
+            // 
+            this.txtkitID.Enabled = false;
+            this.txtkitID.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtkitID.Location = new System.Drawing.Point(68, 27);
+            this.txtkitID.Name = "txtkitID";
+            this.txtkitID.Size = new System.Drawing.Size(66, 22);
+            this.txtkitID.TabIndex = 261;
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label40.Location = new System.Drawing.Point(149, 31);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(42, 14);
+            this.label40.TabIndex = 259;
+            this.label40.Text = "Name:";
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label41.Location = new System.Drawing.Point(12, 31);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(36, 14);
+            this.label41.TabIndex = 258;
+            this.label41.Text = "KitID:";
+            // 
+            // objKitTeamView
+            // 
+            this.objKitTeamView.AllColumns.Add(this.olvColumn5);
+            this.objKitTeamView.AllColumns.Add(this.olvColumn15);
+            this.objKitTeamView.AllColumns.Add(this.KitIndex);
+            this.objKitTeamView.CellEditUseWholeCell = false;
+            this.objKitTeamView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn5,
+            this.olvColumn15});
+            this.objKitTeamView.Cursor = System.Windows.Forms.Cursors.Default;
+            this.objKitTeamView.FullRowSelect = true;
+            this.objKitTeamView.HeaderUsesThemes = true;
+            this.objKitTeamView.HeaderWordWrap = true;
+            this.objKitTeamView.HideSelection = false;
+            this.objKitTeamView.IsSimpleDragSource = true;
+            this.objKitTeamView.Location = new System.Drawing.Point(8, 24);
+            this.objKitTeamView.Name = "objKitTeamView";
+            this.objKitTeamView.SelectAllOnControlA = false;
+            this.objKitTeamView.SelectColumnsOnRightClick = false;
+            this.objKitTeamView.SelectColumnsOnRightClickBehaviour = BrightIdeasSoftware.ObjectListView.ColumnSelectBehaviour.None;
+            this.objKitTeamView.ShowItemCountOnGroups = true;
+            this.objKitTeamView.Size = new System.Drawing.Size(236, 538);
+            this.objKitTeamView.SortGroupItemsByPrimaryColumn = false;
+            this.objKitTeamView.TabIndex = 91;
+            this.objKitTeamView.UseCompatibleStateImageBehavior = false;
+            this.objKitTeamView.UseFiltering = true;
+            this.objKitTeamView.View = System.Windows.Forms.View.Details;
+            this.objKitTeamView.SelectionChanged += new System.EventHandler(this.objKitTeamView_SelectionChanged);
+            // 
+            // olvColumn5
+            // 
+            this.olvColumn5.AspectName = "KitName";
+            this.olvColumn5.Groupable = false;
+            this.olvColumn5.IsEditable = false;
+            this.olvColumn5.Text = "Name";
+            this.olvColumn5.Width = 150;
+            // 
+            // olvColumn15
+            // 
+            this.olvColumn15.AspectName = "KitID";
+            this.olvColumn15.Groupable = false;
+            this.olvColumn15.IsEditable = false;
+            this.olvColumn15.Searchable = false;
+            this.olvColumn15.Sortable = false;
+            this.olvColumn15.Text = "KitID";
+            this.olvColumn15.WordWrap = true;
+            // 
+            // KitIndex
+            // 
+            this.KitIndex.AspectName = "KitIndex";
+            this.KitIndex.DisplayIndex = 2;
+            this.KitIndex.IsVisible = false;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(8, 3);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(90, 18);
+            this.label20.TabIndex = 88;
+            this.label20.Text = "Kit Selection:";
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.groupBox6);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(1027, 568);
+            this.tabPage1.TabIndex = 4;
+            this.tabPage1.Text = "Settings";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.button1);
+            this.groupBox6.Controls.Add(this.txtLinStartOffInt);
+            this.groupBox6.Controls.Add(this.txtLinEndOffInt);
+            this.groupBox6.Controls.Add(this.txtKitsEndOffInt);
+            this.groupBox6.Controls.Add(this.txtKitsStartOffInt);
+            this.groupBox6.Controls.Add(this.txtTeamEndOffInt);
+            this.groupBox6.Controls.Add(this.txtTeamStartOffInt);
+            this.groupBox6.Controls.Add(this.txtPlayEndOffInt);
+            this.groupBox6.Controls.Add(this.txtPlayStartOffInt);
+            this.groupBox6.Controls.Add(this.txtLinEndOff);
+            this.groupBox6.Controls.Add(this.txtLinStartOff);
+            this.groupBox6.Controls.Add(this.txtKitsEndOff);
+            this.groupBox6.Controls.Add(this.txtKitsStartOff);
+            this.groupBox6.Controls.Add(this.txtTeamEndOff);
+            this.groupBox6.Controls.Add(this.txtTeamStartOff);
+            this.groupBox6.Controls.Add(this.txtPlayEndOff);
+            this.groupBox6.Controls.Add(this.label50);
+            this.groupBox6.Controls.Add(this.label49);
+            this.groupBox6.Controls.Add(this.label48);
+            this.groupBox6.Controls.Add(this.label19);
+            this.groupBox6.Controls.Add(this.txtPlayStartOff);
+            this.groupBox6.Controls.Add(this.label47);
+            this.groupBox6.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox6.Location = new System.Drawing.Point(3, 3);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(777, 559);
+            this.groupBox6.TabIndex = 93;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "App Settings:";
+            this.groupBox6.Enter += new System.EventHandler(this.groupBox6_Enter);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(658, 526);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(105, 27);
+            this.button1.TabIndex = 287;
+            this.button1.Text = "Save Settings";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // txtLinStartOffInt
+            // 
+            this.txtLinStartOffInt.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLinStartOffInt.Location = new System.Drawing.Point(5, 452);
+            this.txtLinStartOffInt.Name = "txtLinStartOffInt";
+            this.txtLinStartOffInt.Size = new System.Drawing.Size(52, 22);
+            this.txtLinStartOffInt.TabIndex = 286;
+            // 
+            // txtLinEndOffInt
+            // 
+            this.txtLinEndOffInt.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLinEndOffInt.Location = new System.Drawing.Point(393, 452);
+            this.txtLinEndOffInt.Name = "txtLinEndOffInt";
+            this.txtLinEndOffInt.Size = new System.Drawing.Size(52, 22);
+            this.txtLinEndOffInt.TabIndex = 285;
+            // 
+            // txtKitsEndOffInt
+            // 
+            this.txtKitsEndOffInt.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtKitsEndOffInt.Location = new System.Drawing.Point(393, 344);
+            this.txtKitsEndOffInt.Name = "txtKitsEndOffInt";
+            this.txtKitsEndOffInt.Size = new System.Drawing.Size(52, 22);
+            this.txtKitsEndOffInt.TabIndex = 284;
+            // 
+            // txtKitsStartOffInt
+            // 
+            this.txtKitsStartOffInt.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtKitsStartOffInt.Location = new System.Drawing.Point(5, 344);
+            this.txtKitsStartOffInt.Name = "txtKitsStartOffInt";
+            this.txtKitsStartOffInt.Size = new System.Drawing.Size(52, 22);
+            this.txtKitsStartOffInt.TabIndex = 283;
+            // 
+            // txtTeamEndOffInt
+            // 
+            this.txtTeamEndOffInt.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTeamEndOffInt.Location = new System.Drawing.Point(394, 236);
+            this.txtTeamEndOffInt.Name = "txtTeamEndOffInt";
+            this.txtTeamEndOffInt.Size = new System.Drawing.Size(52, 22);
+            this.txtTeamEndOffInt.TabIndex = 282;
+            // 
+            // txtTeamStartOffInt
+            // 
+            this.txtTeamStartOffInt.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTeamStartOffInt.Location = new System.Drawing.Point(5, 236);
+            this.txtTeamStartOffInt.Name = "txtTeamStartOffInt";
+            this.txtTeamStartOffInt.Size = new System.Drawing.Size(52, 22);
+            this.txtTeamStartOffInt.TabIndex = 281;
+            // 
+            // txtPlayEndOffInt
+            // 
+            this.txtPlayEndOffInt.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPlayEndOffInt.Location = new System.Drawing.Point(396, 128);
+            this.txtPlayEndOffInt.Name = "txtPlayEndOffInt";
+            this.txtPlayEndOffInt.Size = new System.Drawing.Size(52, 22);
+            this.txtPlayEndOffInt.TabIndex = 280;
+            // 
+            // txtPlayStartOffInt
+            // 
+            this.txtPlayStartOffInt.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPlayStartOffInt.Location = new System.Drawing.Point(9, 128);
+            this.txtPlayStartOffInt.Name = "txtPlayStartOffInt";
+            this.txtPlayStartOffInt.Size = new System.Drawing.Size(52, 22);
+            this.txtPlayStartOffInt.TabIndex = 279;
+            // 
+            // txtLinEndOff
+            // 
+            this.txtLinEndOff.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLinEndOff.Location = new System.Drawing.Point(393, 392);
+            this.txtLinEndOff.Multiline = true;
+            this.txtLinEndOff.Name = "txtLinEndOff";
+            this.txtLinEndOff.Size = new System.Drawing.Size(370, 54);
+            this.txtLinEndOff.TabIndex = 278;
+            // 
+            // txtLinStartOff
+            // 
+            this.txtLinStartOff.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLinStartOff.Location = new System.Drawing.Point(5, 392);
+            this.txtLinStartOff.Multiline = true;
+            this.txtLinStartOff.Name = "txtLinStartOff";
+            this.txtLinStartOff.Size = new System.Drawing.Size(372, 54);
+            this.txtLinStartOff.TabIndex = 277;
+            // 
+            // txtKitsEndOff
+            // 
+            this.txtKitsEndOff.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtKitsEndOff.Location = new System.Drawing.Point(393, 284);
+            this.txtKitsEndOff.Multiline = true;
+            this.txtKitsEndOff.Name = "txtKitsEndOff";
+            this.txtKitsEndOff.Size = new System.Drawing.Size(370, 54);
+            this.txtKitsEndOff.TabIndex = 276;
+            // 
+            // txtKitsStartOff
+            // 
+            this.txtKitsStartOff.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtKitsStartOff.Location = new System.Drawing.Point(5, 284);
+            this.txtKitsStartOff.Multiline = true;
+            this.txtKitsStartOff.Name = "txtKitsStartOff";
+            this.txtKitsStartOff.Size = new System.Drawing.Size(372, 54);
+            this.txtKitsStartOff.TabIndex = 275;
+            // 
+            // txtTeamEndOff
+            // 
+            this.txtTeamEndOff.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTeamEndOff.Location = new System.Drawing.Point(394, 176);
+            this.txtTeamEndOff.Multiline = true;
+            this.txtTeamEndOff.Name = "txtTeamEndOff";
+            this.txtTeamEndOff.Size = new System.Drawing.Size(370, 54);
+            this.txtTeamEndOff.TabIndex = 274;
+            // 
+            // txtTeamStartOff
+            // 
+            this.txtTeamStartOff.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTeamStartOff.Location = new System.Drawing.Point(6, 176);
+            this.txtTeamStartOff.Multiline = true;
+            this.txtTeamStartOff.Name = "txtTeamStartOff";
+            this.txtTeamStartOff.Size = new System.Drawing.Size(372, 54);
+            this.txtTeamStartOff.TabIndex = 273;
+            // 
+            // txtPlayEndOff
+            // 
+            this.txtPlayEndOff.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPlayEndOff.Location = new System.Drawing.Point(396, 68);
+            this.txtPlayEndOff.Multiline = true;
+            this.txtPlayEndOff.Name = "txtPlayEndOff";
+            this.txtPlayEndOff.Size = new System.Drawing.Size(370, 54);
+            this.txtPlayEndOff.TabIndex = 272;
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label50.Location = new System.Drawing.Point(0, 267);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(71, 14);
+            this.label50.TabIndex = 271;
+            this.label50.Text = "Kits Offsets:";
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label49.Location = new System.Drawing.Point(3, 375);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(94, 14);
+            this.label49.TabIndex = 270;
+            this.label49.Text = "Lineups Offsets:";
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label48.Location = new System.Drawing.Point(2, 159);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(86, 14);
+            this.label48.TabIndex = 269;
+            this.label48.Text = "Teams Offsets:";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(6, 22);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(621, 14);
+            this.label19.TabIndex = 268;
+            this.label19.Text = "Use the below functionality to manage the settings of the application reading off" +
+    "sets throughout the application.";
+            // 
+            // txtPlayStartOff
+            // 
+            this.txtPlayStartOff.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPlayStartOff.Location = new System.Drawing.Point(8, 68);
+            this.txtPlayStartOff.Multiline = true;
+            this.txtPlayStartOff.Name = "txtPlayStartOff";
+            this.txtPlayStartOff.Size = new System.Drawing.Size(372, 54);
+            this.txtPlayStartOff.TabIndex = 261;
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label47.Location = new System.Drawing.Point(6, 51);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(90, 14);
+            this.label47.TabIndex = 258;
+            this.label47.Text = "Players Offsets:";
             // 
             // toolStrip1
             // 
@@ -1541,6 +2053,10 @@
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
             this.toolStripProgressBar1.Visible = false;
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // mainDBDataSet
             // 
             this.mainDBDataSet.DataSetName = "MainDBDataSet";
@@ -1558,9 +2074,97 @@
             // 
             this.tblLineUpsHexTableAdapter.ClearBeforeFill = true;
             // 
-            // timer1
+            // tblKitsHexTableAdapter
             // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.tblKitsHexTableAdapter.ClearBeforeFill = true;
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label45.Location = new System.Drawing.Point(12, 114);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(91, 14);
+            this.label45.TabIndex = 266;
+            this.label45.Text = "Line Depth Def:";
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label51.Location = new System.Drawing.Point(12, 141);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(93, 14);
+            this.label51.TabIndex = 268;
+            this.label51.Text = "Line Depth Mid:";
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label52.Location = new System.Drawing.Point(12, 170);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(87, 14);
+            this.label52.TabIndex = 270;
+            this.label52.Text = "Line Depth Att:";
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label53.Location = new System.Drawing.Point(12, 85);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(131, 18);
+            this.label53.TabIndex = 272;
+            this.label53.Text = "Line Depth Options:";
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label54.Location = new System.Drawing.Point(12, 21);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(114, 18);
+            this.label54.TabIndex = 273;
+            this.label54.Text = "General Options:";
+            // 
+            // label55
+            // 
+            this.label55.AutoSize = true;
+            this.label55.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label55.ForeColor = System.Drawing.Color.Red;
+            this.label55.Location = new System.Drawing.Point(65, 192);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(176, 14);
+            this.label55.TabIndex = 275;
+            this.label55.Text = "[0] FLAT <--------------> DEEP [100]";
+            // 
+            // txtLinAtt
+            // 
+            this.txtLinAtt.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLinAtt.Location = new System.Drawing.Point(109, 167);
+            this.txtLinAtt.MaxLength = 3;
+            this.txtLinAtt.Name = "txtLinAtt";
+            this.txtLinAtt.Size = new System.Drawing.Size(69, 22);
+            this.txtLinAtt.TabIndex = 276;
+            // 
+            // txtLinMid
+            // 
+            this.txtLinMid.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLinMid.Location = new System.Drawing.Point(109, 134);
+            this.txtLinMid.MaxLength = 3;
+            this.txtLinMid.Name = "txtLinMid";
+            this.txtLinMid.Size = new System.Drawing.Size(69, 22);
+            this.txtLinMid.TabIndex = 277;
+            // 
+            // txtLinDef
+            // 
+            this.txtLinDef.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLinDef.Location = new System.Drawing.Point(109, 106);
+            this.txtLinDef.MaxLength = 3;
+            this.txtLinDef.Name = "txtLinDef";
+            this.txtLinDef.Size = new System.Drawing.Size(69, 22);
+            this.txtLinDef.TabIndex = 278;
             // 
             // frmMain
             // 
@@ -1575,7 +2179,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Frans\'s RC4 Editor 0.3";
+            this.Text = "Frans\'s RC4 Editor 0.4";
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.pnlApp.ResumeLayout(false);
             this.tbcMain.ResumeLayout(false);
@@ -1603,6 +2207,14 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objListViewTeams)).EndInit();
+            this.tbpKits.ResumeLayout(false);
+            this.tbpKits.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.objKitTeamView)).EndInit();
+            this.tabPage1.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -1731,7 +2343,6 @@
         private BrightIdeasSoftware.OLVColumn olvColumn9;
         private BrightIdeasSoftware.OLVColumn TeamIndex;
         private BrightIdeasSoftware.OLVColumn PlayerIndex1;
-        private BrightIdeasSoftware.OLVColumn TeamIndex2;
         private BrightIdeasSoftware.OLVColumn PlayIndex1;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.TextBox txtTeamHEX;
@@ -1747,6 +2358,59 @@
         private System.Windows.Forms.ToolStripButton toolStripButton6;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.TabPage tbpKits;
+        private BrightIdeasSoftware.ObjectListView objKitTeamView;
+        private BrightIdeasSoftware.OLVColumn olvColumn5;
+        private BrightIdeasSoftware.OLVColumn olvColumn15;
+        private System.Windows.Forms.Label label20;
+        private BrightIdeasSoftware.OLVColumn KitIndex;
+        private BrightIdeasSoftware.OLVColumn TeamIndex2;
+        private MainDBDataSetTableAdapters.tblKitsHexTableAdapter tblKitsHexTableAdapter;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.TextBox txtCollarID;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox txtKitHex;
+        private System.Windows.Forms.TextBox txtkitName;
+        private System.Windows.Forms.TextBox txtkitID;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.TextBox txtLinEndOff;
+        private System.Windows.Forms.TextBox txtLinStartOff;
+        private System.Windows.Forms.TextBox txtKitsEndOff;
+        private System.Windows.Forms.TextBox txtKitsStartOff;
+        private System.Windows.Forms.TextBox txtTeamEndOff;
+        private System.Windows.Forms.TextBox txtTeamStartOff;
+        private System.Windows.Forms.TextBox txtPlayEndOff;
+        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox txtPlayStartOff;
+        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox txtLinStartOffInt;
+        private System.Windows.Forms.TextBox txtLinEndOffInt;
+        private System.Windows.Forms.TextBox txtKitsEndOffInt;
+        private System.Windows.Forms.TextBox txtKitsStartOffInt;
+        private System.Windows.Forms.TextBox txtTeamEndOffInt;
+        private System.Windows.Forms.TextBox txtTeamStartOffInt;
+        private System.Windows.Forms.TextBox txtPlayEndOffInt;
+        private System.Windows.Forms.TextBox txtPlayStartOffInt;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.TextBox txtNumberID;
+        private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.Label label51;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.Label label54;
+        private System.Windows.Forms.Label label53;
+        private System.Windows.Forms.TextBox txtLinDef;
+        private System.Windows.Forms.TextBox txtLinMid;
+        private System.Windows.Forms.TextBox txtLinAtt;
+        private System.Windows.Forms.Label label55;
     }
 }
 

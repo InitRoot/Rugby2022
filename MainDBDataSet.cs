@@ -9,6 +9,14 @@
 
 namespace RC4Editor.MainDBDataSetTableAdapters
 {
+    partial class tblTeamsHexTableAdapter
+    {
+    }
+
+    partial class tblKitsHexTableAdapter
+    {
+    }
+
     partial class tblLineUpsHexTableAdapter
     {
     }

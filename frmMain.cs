@@ -26,6 +26,7 @@ namespace RC4Editor
         public frmMain()
         {
             InitializeComponent();
+            loadSettings();
             lockScreen();
             loadRCNations();
             loadRCPositions();
@@ -42,7 +43,11 @@ namespace RC4Editor
 
         private void lockScreen()
         {
-            pnlApp.Enabled = false;
+            pnlApp.Enabled = true;
+            tbpPlayers.Hide();
+            tbpLineups.Hide();
+            tbpTeams.Hide();
+            tbpKits.Hide();
             toolStripButton2.Enabled = false;
             toolStripButton3.Enabled = false;
             toolStripButton5.Enabled = false;
@@ -52,6 +57,10 @@ namespace RC4Editor
         private void unlockScreen()
         {
             pnlApp.Enabled = true;
+            tbpPlayers.Show();
+            tbpLineups.Show();
+            tbpTeams.Show();
+            tbpKits.Show();
             toolStripButton2.Enabled = true;
             toolStripButton3.Enabled = true;
             toolStripButton5.Enabled = true;
@@ -190,20 +199,48 @@ namespace RC4Editor
                 var onlyfilename = Path.GetFileName(openFileDialog1.FileName);
 
                 //We first load each table from the database in their HEX values
-                byte[] bplayers = GetPlayerBytesFromFile(fileName);
-                byte[] blineup = GetLineUpBytesFromFile(fileName); //not reading all the lineups
-                byte[] bteams = GetTeamsBytesFromFile(fileName);
+
+                Properties.Settings.Default.KitsStart = txtPlayStartOff.Text;
+                Properties.Settings.Default.KitsEnd = txtPlayEndOff.Text;
+                Properties.Settings.Default.PlayStartInt = Convert.ToInt32(txtPlayStartOffInt.Text);
+                Properties.Settings.Default.PlayEndInt = Convert.ToInt32(txtPlayEndOffInt.Text);
+
+                //Teams
+                Properties.Settings.Default.TeamsStart = txtTeamStartOff.Text;
+                Properties.Settings.Default.TeamsEnd = txtTeamEndOff.Text;
+                Properties.Settings.Default.TeamsStartInt = Convert.ToInt32(txtTeamStartOffInt.Text);
+                Properties.Settings.Default.TeamsEndInt = Convert.ToInt32(txtTeamEndOffInt.Text);
+
+                //Kits
+                Properties.Settings.Default.KitsStart = txtKitsStartOff.Text;
+                Properties.Settings.Default.KitsEnd = txtKitsEndOff.Text;
+                Properties.Settings.Default.KitsStartInt = Convert.ToInt32(txtKitsStartOffInt.Text);
+                Properties.Settings.Default.KitsEndint = Convert.ToInt32(txtKitsEndOffInt.Text);
+
+                //Lineups
+                Properties.Settings.Default.LinStart = txtLinStartOff.Text;
+                Properties.Settings.Default.LinEnd = txtLinEndOff.Text;
+                Properties.Settings.Default.LinStartInt = Convert.ToInt32(txtLinStartOffInt.Text);
+                Properties.Settings.Default.LinEndInt = Convert.ToInt32(txtLinEndOffInt.Text);
+
+
+                byte[] bplayers = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.PlayStart, Properties.Settings.Default.PlayEnd, Properties.Settings.Default.PlayStartInt, Properties.Settings.Default.PlayEndInt);
+                byte[] bteams = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.TeamsStart, Properties.Settings.Default.TeamsEnd, Properties.Settings.Default.TeamsStartInt, Properties.Settings.Default.TeamsEndInt); //not reading all the lineups
+                byte[] blineup = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.LinStart, Properties.Settings.Default.LinEnd, Properties.Settings.Default.LinStartInt, Properties.Settings.Default.LinEndInt);
+                byte[] btkits = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.KitsStart, Properties.Settings.Default.KitsEnd, Properties.Settings.Default.KitsStartInt, Properties.Settings.Default.KitsEndint);
 
 
                 //We create a new byte lists of each record, includes the size per record in bytes
                 List<byte[]> playerssp = splitDataToByteArray(bplayers, 1348);
                 List<byte[]> lineupssp = splitDataToByteArray(blineup, 776);
                 List<byte[]> teamssp = splitDataToByteArray(bteams, 212);
-            
+                List<byte[]> kitssp = splitDataToByteArray(btkits, 280);
+
                 //We load each list of bytes into our database
                 loadSplittedHEXtoDB(playerssp, "players");
                 loadSplittedHEXtoDB(lineupssp, "lineups");
                 loadSplittedHEXtoDB(teamssp, "teams");
+                loadSplittedHEXtoDB(kitssp, "kits");
 
                 //Now we populate our lists using the data from the database
                 populateViews();
@@ -212,27 +249,101 @@ namespace RC4Editor
             }
         }
 
+        private void loadSettings()
+        {
+            //Players
+            txtPlayStartOff.Text = Properties.Settings.Default.PlayStart;
+            txtPlayEndOff.Text = Properties.Settings.Default.PlayEnd;
+            txtPlayStartOffInt.Text = Properties.Settings.Default.PlayStartInt.ToString();
+            txtPlayEndOffInt.Text = Properties.Settings.Default.PlayEndInt.ToString();
+
+            //Teams
+            txtTeamStartOff.Text = Properties.Settings.Default.TeamsStart;
+            txtTeamEndOff.Text = Properties.Settings.Default.TeamsEnd;
+            txtTeamStartOffInt.Text = Properties.Settings.Default.TeamsStartInt.ToString();
+            txtTeamEndOffInt.Text = Properties.Settings.Default.TeamsEndInt.ToString();
+
+            //Kits
+            txtKitsStartOff.Text = Properties.Settings.Default.KitsStart;
+            txtKitsEndOff.Text = Properties.Settings.Default.KitsEnd;
+            txtKitsStartOffInt.Text = Properties.Settings.Default.KitsStartInt.ToString();
+            txtKitsEndOffInt.Text = Properties.Settings.Default.KitsEndint.ToString();
+
+            //Lineups
+            txtLinStartOff.Text = Properties.Settings.Default.LinStart;
+            txtLinEndOff.Text = Properties.Settings.Default.LinEnd;
+            txtLinStartOffInt.Text = Properties.Settings.Default.LinStartInt.ToString();
+            txtLinEndOffInt.Text = Properties.Settings.Default.LinEndInt.ToString();
+        }
+
+        private void saveSettings()
+        {
+            //Players
+            Properties.Settings.Default.PlayStart = txtPlayStartOff.Text;
+            Properties.Settings.Default.PlayEnd = txtPlayEndOff.Text;
+            Properties.Settings.Default.PlayStartInt = Convert.ToInt32(txtPlayStartOffInt.Text);
+            Properties.Settings.Default.PlayEndInt = Convert.ToInt32(txtPlayEndOffInt.Text);
+
+            //Teams
+             Properties.Settings.Default.TeamsStart = txtTeamStartOff.Text;
+             Properties.Settings.Default.TeamsEnd = txtTeamEndOff.Text;
+             Properties.Settings.Default.TeamsStartInt = Convert.ToInt32(txtTeamStartOffInt.Text);
+             Properties.Settings.Default.TeamsEndInt= Convert.ToInt32(txtTeamEndOffInt.Text);
+
+            //Kits
+            Properties.Settings.Default.KitsStart = txtKitsStartOff.Text;
+            Properties.Settings.Default.KitsEnd = txtKitsEndOff.Text;
+            Properties.Settings.Default.KitsStartInt = Convert.ToInt32(txtKitsStartOffInt.Text);
+            Properties.Settings.Default.KitsEndint = Convert.ToInt32(txtKitsEndOffInt.Text);
+
+            //Lineups
+            Properties.Settings.Default.LinStart = txtLinStartOff.Text;
+            Properties.Settings.Default.LinEnd = txtLinEndOff.Text;
+            Properties.Settings.Default.LinStartInt = Convert.ToInt32(txtLinStartOffInt.Text);
+            Properties.Settings.Default.LinEndInt = Convert.ToInt32(txtLinEndOffInt.Text);
+
+            loadSettings();
+        }
         private void loadPostWrite()
         {
             //We first load each table from the database in their HEX values
             byte[] bplayers = GetPlayerBytesFromFile(fileName);
             byte[] blineup = GetLineUpBytesFromFile(fileName);
             byte[] bteams = GetTeamsBytesFromFile(fileName);
-
+            byte[] btkits = GetKitsBytesFromFile(fileName);
 
             //We create a new byte lists of each record, includes the size per record in bytes
             List<byte[]> playerssp = splitDataToByteArray(bplayers, 1348);
             List<byte[]> lineupssp = splitDataToByteArray(blineup, 776);
             List<byte[]> teamssp = splitDataToByteArray(bteams, 212);
+            List<byte[]> kitssp = splitDataToByteArray(btkits, 280);
 
             //We load each list of bytes into our database
             loadSplittedHEXtoDB(playerssp, "players");
             loadSplittedHEXtoDB(lineupssp, "lineups");
             loadSplittedHEXtoDB(teamssp, "teams");
+            loadSplittedHEXtoDB(kitssp, "kits");
 
             //Now we populate our lists using the data from the database
             populateViews();
 
+
+        }
+
+        public byte[] GetGlobalBytesFromFile(string fullFilePath,string posStartStr, string posEndStr, int ExtaStr, int ExtraEnd)
+        {
+
+            int posEnd = 0;
+            int posStart = 0;
+            byte[] buff = null;
+            buff = File.ReadAllBytes(fullFilePath);
+            posStart = Search(buff, StringToByteArray(posStartStr));
+            posStart = posStart + ExtaStr;
+            posEnd = Search(buff, StringToByteArray(posEndStr));
+            //MessageBox.Show(posEnd.ToString());
+            posEnd = posEnd + ExtraEnd;
+            byte[] slice = Extensions.ArraySlice(buff, posStart, posEnd);
+            return slice;
 
         }
         public byte[] GetPlayerBytesFromFile(string fullFilePath)
@@ -245,7 +356,7 @@ namespace RC4Editor
             posStart = Search(buff, StringToByteArray("EA030000000827060200000000001000000010000200000000001000000010000000000000000000000000000000000000000000000080"));
             //posStart = posStart + 64;
             // MessageBox.Show(posStart.ToString());
-            posEnd = Search(buff, StringToByteArray("E9030000ED9C78070000000000000000E903EA030400000008000000000000000000000000000204020001020002040002000104070000010000000001576F726C64205275676279204368616D70696F6E7368697000000000000000000000777263"));
+            posEnd = Search(buff, StringToByteArray("E9030000ED9C78070000000000000000E903"));
              //MessageBox.Show(posEnd.ToString());
             byte[] slice = Extensions.ArraySlice(buff, posStart, posEnd);
             return slice;
@@ -283,6 +394,23 @@ namespace RC4Editor
             posEnd = Search(buff, StringToByteArray("EA030000000827060200000000001000000010000200000000001000000010000000000000000000000000000000"));
             //posEnd = posEnd - 212;
            // MessageBox.Show(posEnd.ToString());
+            byte[] slice = Extensions.ArraySlice(buff, posStart, posEnd);
+            return slice;
+
+        }
+
+        public byte[] GetKitsBytesFromFile(string fullFilePath)
+        {
+            int posEnd = 0;
+            int posStart = 0;
+            byte[] buff = null;
+            buff = File.ReadAllBytes(fullFilePath);
+            posStart = Search(buff, StringToByteArray("E3030000240124010100479C581342770000005F0A"));
+            posStart = posStart; //we have to adjust as we perform the lookup before the table starts
+                                      // MessageBox.Show(posStart.ToString());
+            posEnd = Search(buff, StringToByteArray("E90300000018F50500005089E90300002D00000000000153696D6F6E2043756C68616E6500000000"));
+            //posEnd = posEnd - 212;
+            // MessageBox.Show(posEnd.ToString());
             byte[] slice = Extensions.ArraySlice(buff, posStart, posEnd);
             return slice;
 
@@ -335,6 +463,13 @@ namespace RC4Editor
                         tblTeamsHexTableAdapter.Insert(i, ToHexString(bytelist[i]), "",null);
                     }
                     break;
+                case "kits":
+                    tblKitsHexTableAdapter.ClearTable();
+                    for (int i = 0; i < bytelist.Count; i++)
+                    {
+                        tblKitsHexTableAdapter.Insert(i, ToHexString(bytelist[i]), "", null);
+                    }
+                    break;
                 default:
                     MessageBox.Show("Error! Data not inserted, coding error!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
@@ -355,11 +490,13 @@ namespace RC4Editor
             objListViewPlayers2.Items.Clear();
             objListViewTeams.Items.Clear();
             objListViewTeams2.Items.Clear();
+            objKitTeamView.Items.Clear();
 
             //Let's load our type list with get:set methods
             List<Players> playersListEditor = new List<Players>();
             List<Players> linplayersListEditor = new List<Players>();
             List<Teams> teamsListEditor = new List<Teams>();
+            List<Kits> kitsListEditor = new List<Kits>();
 
             //Get data from players
             if (tblPlayersHexTableAdapter.GetData().Count != 0)
@@ -468,7 +605,7 @@ namespace RC4Editor
                 objListViewTeams2.SetObjects(teamsListEditor);
             }
 
-            if (tblLineUpsHexTableAdapter.GetData().Count != 0)
+            if (tblKitsHexTableAdapter.GetData().Count != 0)
             {
                 //DataVariables
                 int i = 0;
@@ -497,6 +634,50 @@ namespace RC4Editor
 
                     i++;
                 }
+
+            }
+
+
+            if (tblKitsHexTableAdapter.GetData().Count != 0)
+            {
+   
+                //DataVariables
+                int i = 0;
+                int rwindex = 0;
+                foreach (DataRow dr in tblKitsHexTableAdapter.GetData())
+                {
+                    rwindex = i;
+                    String kitName = "";
+                    string kitID = "";
+
+                    //Reads HEX datarow as source byte
+                    byte[] source = StringToByteArray(dr.ItemArray[1].ToString());
+
+                    //initialise bytes with correct sizes
+                    byte[] bufferName = new byte[25];
+                    byte[] btKitID = new byte[2];
+
+
+                    //Copy bytes out of the source
+                    Buffer.BlockCopy(source, 31, bufferName, 0, 25);
+                    Buffer.BlockCopy(source, 0, btKitID, 0, 2);
+
+                    //Loads bytes to appropriate variables
+                    kitName = HexString2Ascii(ToHexString(bufferName)).Replace("\0", string.Empty);
+                    kitID = GetLittleEndianIntegerFromByteArray(btKitID).ToString();
+
+                   
+                    //Populates our view arrays
+                    kitsListEditor.Add(new Kits(kitID, kitName, rwindex));
+
+                    //Add the IDs to our dataset
+                    dr[3] = kitID;
+                    tblKitsHexTableAdapter.Update(dr);
+
+                    i++;
+                }
+
+                objKitTeamView.SetObjects(kitsListEditor);
 
             }
 
@@ -582,31 +763,91 @@ namespace RC4Editor
             // All variables
             String TeamName = "";
             String ShortName = "";
+            String collarStr = "";
             int plateamIDyerID = 0;
+            int deflinedepth = 0;
+            int midlinedepth = 0;
+            int attlinedepth = 0;
 
 
             byte[] source = StringToByteArray(tmHEX);
             byte[] bfplateamIDyerID = new byte[2]; //Checked
             byte[] bfTeamName = new byte[32]; //Checked
             byte[] bfShortName = new byte[7]; //Checked
+            byte[] bfcollar = new byte[1]; //Checked
+            byte[] bfdeflinedepth = new byte[2]; //Checked
+            byte[] bfmidlinedepth = new byte[2]; //Checked
+            byte[] bfattlinedepth = new byte[2]; //Checked
 
 
             //Extracts the values from the hex into our byte values
             Buffer.BlockCopy(source, 0, bfplateamIDyerID, 0, 2);
             Buffer.BlockCopy(source, 148, bfTeamName, 0, 32);
             Buffer.BlockCopy(source, 205, bfShortName, 0, 7);
+            Buffer.BlockCopy(source, 205, bfcollar, 0, 1);
+            Buffer.BlockCopy(source, 66, bfdeflinedepth, 0, 2);
+            Buffer.BlockCopy(source, 92, bfmidlinedepth, 0, 2);
+            Buffer.BlockCopy(source, 118, bfattlinedepth, 0, 2);
 
             string tmnamehex = ToHexString(bfTeamName);
             //Converts extracted values to the required formats
             plateamIDyerID = GetLittleEndianIntegerFromByteArray(bfplateamIDyerID);
             TeamName = HexString2Ascii(tmnamehex).Replace("\0", string.Empty);
             ShortName = HexString2Ascii(ToHexString(bfShortName)).Replace("\0", string.Empty);
+             deflinedepth = GetLittleEndianIntegerFromByteArray(bfdeflinedepth); 
+             midlinedepth = GetLittleEndianIntegerFromByteArray(bfmidlinedepth);
+            attlinedepth = GetLittleEndianIntegerFromByteArray(bfattlinedepth);
+
+            deflinedepth = deflinedepth/100;
+            midlinedepth = midlinedepth/100;
+            attlinedepth = attlinedepth/100;
 
             txtTeamID.Text = plateamIDyerID.ToString();
             txtTeamName.Text = TeamName;
             txtShortName.Text = ShortName;
-
+            txtLinDef.Text = deflinedepth.ToString();
+            txtLinMid.Text = midlinedepth.ToString();
+            txtLinAtt.Text = attlinedepth.ToString();
             txtTeamHEX.Text = tmHEX;
+
+        }
+
+        public void loadKitData(string ktHEX)
+        {
+
+            // All variables
+            String KitName = "";
+            int kitNumber = 0;
+            String collarStr = "";
+            int kitID = 0;
+
+
+            byte[] source = StringToByteArray(ktHEX);
+            byte[] bfKitID = new byte[2]; //Checked
+            byte[] bfKitName = new byte[25]; //Checked
+            byte[] bfcollar = new byte[1]; //Checked
+            byte[] bfkitnumber = new byte[2]; //Checked
+
+
+            //Extracts the values from the hex into our byte values
+            Buffer.BlockCopy(source, 0, bfKitID, 0, 2);
+            Buffer.BlockCopy(source, 31, bfKitName, 0, 25);
+            Buffer.BlockCopy(source, 9, bfcollar, 0, 1);
+            Buffer.BlockCopy(source, 6, bfkitnumber, 0, 2);
+
+            string tmnamehex = ToHexString(bfKitName);
+            //Converts extracted values to the required formats
+            kitID = GetLittleEndianIntegerFromByteArray(bfKitID);
+            KitName = HexString2Ascii(tmnamehex).Replace("\0", string.Empty);
+            collarStr = ToHexString(bfcollar);
+            kitNumber = GetLittleEndianIntegerFromByteArray(bfkitnumber);
+
+
+            txtkitID.Text = kitID.ToString();
+            txtkitName.Text = KitName;
+            txtCollarID.Text = collarStr.ToString();
+            txtNumberID.Text = kitNumber.ToString();
+            txtKitHex.Text = ktHEX;
 
         }
 
@@ -962,6 +1203,25 @@ namespace RC4Editor
 
         }
 
+        public String DBGetKitHEXbyID(int plID)
+        {
+            String HEX = "";
+
+            if (tblKitsHexTableAdapter.GetDataByID(plID).Count < 2)
+            {
+                foreach (DataRow dr in tblKitsHexTableAdapter.GetDataByID(plID))
+                {
+                    HEX = (dr.ItemArray[1].ToString());
+                }
+            }
+            else
+            {
+                MessageBox.Show("Mutliple records matched. Error! Contact developer!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return HEX;
+
+        }
+
         public String DBGetLineUpsHEXbyTeamID(int tmID)
         {
             String HEX = "";
@@ -1009,12 +1269,18 @@ namespace RC4Editor
             this.txtShortName.Text = this.txtShortName.Text.Replace("-", "");
             string hex1 = this.ConvertStringToHex(this.txtTeamName.Text, 32);
             string hex2 = this.ConvertStringToHex(this.txtShortName.Text, 7);
+            string hexLittleEndian1 = this.decimalToHexLittleEndian((int)(Convert.ToInt16(this.txtLinDef.Text) * 100), 2);
+            string hexLittleEndian2 = this.decimalToHexLittleEndian((int)(Convert.ToInt16(this.txtLinMid.Text) * 100), 2);
+            string hexLittleEndian3 = this.decimalToHexLittleEndian((int)(Convert.ToInt16(this.txtLinAtt.Text) * 100), 2);
 
             string str5 =
                text1.Remove(296, 32).Insert(296, hex1) //name
-               .Remove(410, 7).Insert(410, hex2); //surname
-              
- 
+                .Remove(410, 7).Insert(410, hex2) //short
+                .Remove(132, 4).Insert(132, hexLittleEndian1)//def
+                .Remove(184, 4).Insert(184, hexLittleEndian2) //mid
+                .Remove(236, 4).Insert(236, hexLittleEndian3); //att
+
+
             if (str5.Length != text1.Length)
             {
                 int num = (int)MessageBox.Show("Error - Hex sizes do not match.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1024,6 +1290,39 @@ namespace RC4Editor
                 tblTeamsHexTableAdapter.UpdateQueryModHex(str5, text1);
                 PendingChanges = PendingChanges + 1;
                 statusToolstrip.Text = PendingChanges.ToString() + " changes pending to be written to DB!!";
+
+            }
+
+        }
+
+        public void saveKitsHex()
+        {
+            if (txtkitID.Text != "995")
+            {
+                string text1 = this.txtKitHex.Text; //original
+                this.txtkitName.Text = this.txtkitName.Text.Replace("-", "");
+                this.txtCollarID.Text = this.txtCollarID.Text.Replace("-", "");
+                string hex1 = this.ConvertStringToHex(this.txtkitName.Text, 40);
+                string hex2 = txtCollarID.Text;
+                string hexLittleEndian6 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtNumberID.Text), 2);
+                string str5 =
+                   text1.Remove(62, 40).Insert(62, hex1) //name
+                   .Remove(18, 2).Insert(18, hex2)
+                   .Remove(12, 4).Insert(12, hexLittleEndian6);  //collar
+                textBox3.Text = str5;
+
+
+                if (str5.Length != text1.Length)
+                {
+                    int num = (int)MessageBox.Show("Error - Hex sizes do not match.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    tblKitsHexTableAdapter.UpdateQueryModHex(str5, text1);
+                    PendingChanges = PendingChanges + 1;
+                    statusToolstrip.Text = PendingChanges.ToString() + " changes pending to be written to DB!!";
+
+                }
 
             }
 
@@ -1229,6 +1528,18 @@ namespace RC4Editor
             if (tblLineUpsHexTableAdapter.GetDataByNotNullModHex().Count > 0)
             {
                 foreach (DataRow dr in tblLineUpsHexTableAdapter.GetDataByNotNullModHex())
+                {
+                    HEX = (dr.ItemArray[1].ToString());
+                    modHEX = (dr.ItemArray[2].ToString());
+                    int position = this.Search(src, this.StringToByteArray(HEX));
+                    this.ReplaceData(this.fileName, position, this.StringToByteArray(modHEX));
+                }
+
+            }
+
+            if (tblKitsHexTableAdapter.GetDataByNotNullModHex().Count > 0)
+            {
+                foreach (DataRow dr in tblKitsHexTableAdapter.GetDataByNotNullModHex())
                 {
                     HEX = (dr.ItemArray[1].ToString());
                     modHEX = (dr.ItemArray[2].ToString());
@@ -1789,6 +2100,10 @@ namespace RC4Editor
             {
                 saveTeamsHEX();
             }
+            else if (tbcMain.SelectedTab == tbcMain.TabPages["tbpKits"])
+            {
+                saveKitsHex();
+            }
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
@@ -1938,6 +2253,30 @@ namespace RC4Editor
             timer1.Stop();
             toolStripProgressBar1.Visible = false;
             workerThread = null;
+        }
+
+        private void objKitTeamView_SelectionChanged(object sender, EventArgs e)
+        {
+            var olvColumn = this.KitIndex; // whichever column you want
+            var sb = new StringBuilder();
+            foreach (object model in objKitTeamView.SelectedObjects)
+                sb.AppendLine(olvColumn.GetStringValue(model));
+            int selectedCellsAsText = Convert.ToInt32(sb.ToString());
+
+            string kitHEX = DBGetKitHEXbyID(selectedCellsAsText);
+            loadKitData(kitHEX);
+
+
+        }
+
+        private void groupBox6_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            saveSettings();
         }
     }
 }
