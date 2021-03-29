@@ -58,5 +58,11 @@
     <Setting Name="KitsEndint" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="FixStart" Type="System.String" Scope="User">
+      <Value Profile="(Default)">E9030000ED9C7807E903F403F703F303EA0300006DA37807E903EA03EF</Value>
+    </Setting>
+    <Setting Name="FixEnd" Type="System.String" Scope="User">
+      <Value Profile="(Default)">E9035B49445F434F4D5045544954494F4E5F524F554E445D2031000000000000EA030000</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

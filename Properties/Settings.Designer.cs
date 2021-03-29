@@ -229,5 +229,29 @@ namespace RC4Editor.Properties {
                 this["KitsEndint"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("E9030000ED9C7807E903F403F703F303EA0300006DA37807E903EA03EF")]
+        public string FixStart {
+            get {
+                return ((string)(this["FixStart"]));
+            }
+            set {
+                this["FixStart"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("E9035B49445F434F4D5045544954494F4E5F524F554E445D2031000000000000EA030000")]
+        public string FixEnd {
+            get {
+                return ((string)(this["FixEnd"]));
+            }
+            set {
+                this["FixEnd"] = value;
+            }
+        }
     }
 }

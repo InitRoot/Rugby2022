@@ -224,10 +224,18 @@ namespace RC4Editor
                 Properties.Settings.Default.LinEndInt = Convert.ToInt32(txtLinEndOffInt.Text);
 
 
+                //Fixtures
+                Properties.Settings.Default.FixStart = txtFixStart.Text;
+                Properties.Settings.Default.FixEnd = txtLinEndOff.Text;
+                //Properties.Settings.Default.LinStartInt = Convert.ToInt32(txtLinStartOffInt.Text);
+                //Properties.Settings.Default.LinEndInt = Convert.ToInt32(txtLinEndOffInt.Text);
+
+
                 byte[] bplayers = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.PlayStart, Properties.Settings.Default.PlayEnd, Properties.Settings.Default.PlayStartInt, Properties.Settings.Default.PlayEndInt);
                 byte[] bteams = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.TeamsStart, Properties.Settings.Default.TeamsEnd, Properties.Settings.Default.TeamsStartInt, Properties.Settings.Default.TeamsEndInt); //not reading all the lineups
                 byte[] blineup = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.LinStart, Properties.Settings.Default.LinEnd, Properties.Settings.Default.LinStartInt, Properties.Settings.Default.LinEndInt);
                 byte[] btkits = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.KitsStart, Properties.Settings.Default.KitsEnd, Properties.Settings.Default.KitsStartInt, Properties.Settings.Default.KitsEndint);
+                byte[] btfixtures = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.FixStart, Properties.Settings.Default.FixEnd, 0, 0);
 
 
                 //We create a new byte lists of each record, includes the size per record in bytes
@@ -235,12 +243,14 @@ namespace RC4Editor
                 List<byte[]> lineupssp = splitDataToByteArray(blineup, 776);
                 List<byte[]> teamssp = splitDataToByteArray(bteams, 212);
                 List<byte[]> kitssp = splitDataToByteArray(btkits, 280);
+                List<byte[]> fixssp = splitDataToByteArray(btfixtures, 16);
 
                 //We load each list of bytes into our database
                 loadSplittedHEXtoDB(playerssp, "players");
                 loadSplittedHEXtoDB(lineupssp, "lineups");
                 loadSplittedHEXtoDB(teamssp, "teams");
                 loadSplittedHEXtoDB(kitssp, "kits");
+                loadSplittedHEXtoDB(fixssp, "fixtures");
 
                 //Now we populate our lists using the data from the database
                 populateViews();
@@ -274,6 +284,10 @@ namespace RC4Editor
             txtLinEndOff.Text = Properties.Settings.Default.LinEnd;
             txtLinStartOffInt.Text = Properties.Settings.Default.LinStartInt.ToString();
             txtLinEndOffInt.Text = Properties.Settings.Default.LinEndInt.ToString();
+
+            //Fixtures
+            txtFixStart.Text = Properties.Settings.Default.FixStart;
+            txtLinEndOff.Text = Properties.Settings.Default.FixEnd;
         }
 
         private void saveSettings()
@@ -301,6 +315,10 @@ namespace RC4Editor
             Properties.Settings.Default.LinEnd = txtLinEndOff.Text;
             Properties.Settings.Default.LinStartInt = Convert.ToInt32(txtLinStartOffInt.Text);
             Properties.Settings.Default.LinEndInt = Convert.ToInt32(txtLinEndOffInt.Text);
+
+            //Fixtures
+            Properties.Settings.Default.FixStart = txtFixStart.Text;
+            Properties.Settings.Default.FixEnd = txtLinEndOff.Text;
 
             loadSettings();
         }
@@ -470,6 +488,13 @@ namespace RC4Editor
                         tblKitsHexTableAdapter.Insert(i, ToHexString(bytelist[i]), "", null);
                     }
                     break;
+                case "fixtures":
+                    tblFixturesTableAdapter.ClearTable();
+                    for (int i = 0; i < bytelist.Count; i++)
+                    {
+                        tblFixturesTableAdapter.Insert(i, ToHexString(bytelist[i]), "", null);
+                    }
+                    break;
                 default:
                     MessageBox.Show("Error! Data not inserted, coding error!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
@@ -637,7 +662,6 @@ namespace RC4Editor
 
             }
 
-
             if (tblKitsHexTableAdapter.GetData().Count != 0)
             {
    
@@ -768,6 +792,16 @@ namespace RC4Editor
             int deflinedepth = 0;
             int midlinedepth = 0;
             int attlinedepth = 0;
+            int compcarID2 = 0;
+            int compcarID1 = 0;
+            int stripid1 = 0;
+            int stripid2 = 0;
+            int stripid3 = 0;
+            int captID = 0;
+            int goalkickId = 0;
+            int playkickid = 0;
+            int logoid = 0;
+            int countid = 0;
 
 
             byte[] source = StringToByteArray(tmHEX);
@@ -778,6 +812,16 @@ namespace RC4Editor
             byte[] bfdeflinedepth = new byte[2]; //Checked
             byte[] bfmidlinedepth = new byte[2]; //Checked
             byte[] bfattlinedepth = new byte[2]; //Checked
+            byte[] bfcompcarID2 = new byte[2]; //Checked
+            byte[] bfcompcarID1 = new byte[2]; //Checked
+            byte[] bfstripid1 = new byte[2]; //Checked
+            byte[] bfstripid2 = new byte[2]; //Checked
+            byte[] bfstripid3 = new byte[2]; //Checked
+            byte[] bfcaptID = new byte[2]; //Checked
+            byte[] bfgoalkickId = new byte[2]; //Checked
+            byte[] bfplaykickid = new byte[2]; //Checked
+            byte[] bflogoid = new byte[2]; //Checked
+            byte[] bfcountid = new byte[2]; //Checked
 
 
             //Extracts the values from the hex into our byte values
@@ -788,6 +832,17 @@ namespace RC4Editor
             Buffer.BlockCopy(source, 66, bfdeflinedepth, 0, 2);
             Buffer.BlockCopy(source, 92, bfmidlinedepth, 0, 2);
             Buffer.BlockCopy(source, 118, bfattlinedepth, 0, 2);
+            Buffer.BlockCopy(source, 136, bfcompcarID2, 0, 2);
+            Buffer.BlockCopy(source, 134, bfcompcarID1, 0, 2);
+            Buffer.BlockCopy(source, 14, bfstripid1, 0, 2);
+            Buffer.BlockCopy(source, 16, bfstripid2, 0, 2);
+            Buffer.BlockCopy(source, 18, bfstripid3, 0, 2);
+            Buffer.BlockCopy(source, 24, bfcaptID, 0, 2);
+            Buffer.BlockCopy(source, 26, bfgoalkickId, 0, 2);
+            Buffer.BlockCopy(source, 28, bfplaykickid, 0, 2);
+            Buffer.BlockCopy(source, 20, bflogoid, 0, 2);
+            Buffer.BlockCopy(source, 22, bfcountid, 0, 2);
+
 
             string tmnamehex = ToHexString(bfTeamName);
             //Converts extracted values to the required formats
@@ -797,6 +852,17 @@ namespace RC4Editor
              deflinedepth = GetLittleEndianIntegerFromByteArray(bfdeflinedepth); 
              midlinedepth = GetLittleEndianIntegerFromByteArray(bfmidlinedepth);
             attlinedepth = GetLittleEndianIntegerFromByteArray(bfattlinedepth);
+            compcarID2 = GetLittleEndianIntegerFromByteArray(bfcompcarID2);
+            compcarID1 = GetLittleEndianIntegerFromByteArray(bfcompcarID1);
+
+            stripid1 = GetLittleEndianIntegerFromByteArray(bfstripid1);
+            stripid2 = GetLittleEndianIntegerFromByteArray(bfstripid2);
+            stripid3 = GetLittleEndianIntegerFromByteArray(bfstripid3);
+            captID = GetLittleEndianIntegerFromByteArray(bfcaptID);
+            goalkickId = GetLittleEndianIntegerFromByteArray(bfgoalkickId);
+            playkickid = GetLittleEndianIntegerFromByteArray(bfplaykickid);
+            logoid = GetLittleEndianIntegerFromByteArray(bflogoid);
+            countid = GetLittleEndianIntegerFromByteArray(bfcountid);
 
             deflinedepth = deflinedepth/100;
             midlinedepth = midlinedepth/100;
@@ -809,6 +875,16 @@ namespace RC4Editor
             txtLinMid.Text = midlinedepth.ToString();
             txtLinAtt.Text = attlinedepth.ToString();
             txtTeamHEX.Text = tmHEX;
+            txtTeamCompID2.Text = compcarID2.ToString();
+            txtTeamCompID1.Text = compcarID1.ToString();
+            txtteamStripID1.Text = stripid1.ToString();
+            txtteamStripID2.Text = stripid2.ToString();
+            txtteamStripID3.Text = stripid3.ToString();
+            txtPlCaptID.Text = captID.ToString();
+            txtPLGoalKickID.Text = goalkickId.ToString();
+            txtPLplaykickID.Text = playkickid.ToString();
+            txtteamlogiID.Text = logoid.ToString();
+            txtteamassoccountID.Text = countid.ToString();
 
         }
 
@@ -896,8 +972,8 @@ namespace RC4Editor
             byte[] playID = new byte[2]; //Checked
             byte[] bufferName = new byte[25]; //Checked
             byte[] bufferSurname = new byte[25]; //Checked
-            // byte[] btHeight = new byte[1];
-            // byte[] btWeight = new byte[1];
+            byte[] btHeight = new byte[1];
+            byte[] btWeight = new byte[1];
             // byte[] btLck = new byte[1];
             byte[] btFIT = new byte[2];
             byte[] btSPD = new byte[2];
@@ -932,8 +1008,8 @@ namespace RC4Editor
             Buffer.BlockCopy(source, 0, playID, 0, 2);
             Buffer.BlockCopy(source, 220, bufferName, 0, 25);
             Buffer.BlockCopy(source, 245, bufferSurname, 0, 25);
-            // Buffer.BlockCopy(source,, btHeight, 0,);
-            // Buffer.BlockCopy(source,, btWeight, 0,);
+            Buffer.BlockCopy(source,181, btHeight, 0,1);
+            Buffer.BlockCopy(source,182, btWeight, 0,1);
             // Buffer.BlockCopy(source,, btLck, 0,);
             Buffer.BlockCopy(source, 108, btFIT, 0, 2);
             Buffer.BlockCopy(source, 112, btSPD, 0, 2);
@@ -968,8 +1044,8 @@ namespace RC4Editor
             playerID = GetLittleEndianIntegerFromByteArray(playID);
             name = HexString2Ascii(ToHexString(bufferName)).Replace("\0", string.Empty);
             surName = HexString2Ascii(ToHexString(bufferSurname)).Replace("\0", string.Empty);
-            //   height = GetLittleEndianIntegerFromByteArray(btHeight);
-            //   weight = GetLittleEndianIntegerFromByteArray(btWeight);
+            height = GetLittleEndianIntegerFromByteArray(btHeight);
+            weight = GetLittleEndianIntegerFromByteArray(btWeight);
             //   locked = GetLittleEndianIntegerFromByteArray(btLck);
             fitness = GetLittleEndianIntegerFromByteArray(btFIT);
             speed = GetLittleEndianIntegerFromByteArray(btSPD);
@@ -1004,8 +1080,8 @@ namespace RC4Editor
             txtPlayID.Text = playerID.ToString();
             txtName.Text = name;
             txtSurname.Text = surName;
-            //    txtHeight.Text = height.ToString();
-            //    txtWeight.Text = weight.ToString();
+            txtHeight.Text = height.ToString();
+            txtWeight.Text = weight.ToString();
             txtAgility.Text = agil.ToString();
             if (locked == 1) { chkLocked.Checked = true; } else { chkLocked.Checked = false; }
             txtFitness.Text = fitness.ToString();
@@ -1272,13 +1348,33 @@ namespace RC4Editor
             string hexLittleEndian1 = this.decimalToHexLittleEndian((int)(Convert.ToInt16(this.txtLinDef.Text) * 100), 2);
             string hexLittleEndian2 = this.decimalToHexLittleEndian((int)(Convert.ToInt16(this.txtLinMid.Text) * 100), 2);
             string hexLittleEndian3 = this.decimalToHexLittleEndian((int)(Convert.ToInt16(this.txtLinAtt.Text) * 100), 2);
+            string hexLittleEndian6 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtTeamCompID2.Text), 2);
+
+            string hexLittleEndian7 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtteamStripID1.Text), 2);
+            string hexLittleEndian8 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtteamStripID2.Text), 2);
+            string hexLittleEndian9 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtteamStripID3.Text), 2);
+            string hexLittleEndian10 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtPlCaptID.Text), 2);
+            string hexLittleEndian11 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtPLGoalKickID.Text), 2);
+            string hexLittleEndian12 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtPLplaykickID.Text), 2);
+            string hexLittleEndian13 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtteamlogiID.Text), 2);
+            string hexLittleEndian14 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtteamassoccountID.Text), 2);
 
             string str5 =
                text1.Remove(296, 32).Insert(296, hex1) //name
                 .Remove(410, 7).Insert(410, hex2) //short
                 .Remove(132, 4).Insert(132, hexLittleEndian1)//def
                 .Remove(184, 4).Insert(184, hexLittleEndian2) //mid
-                .Remove(236, 4).Insert(236, hexLittleEndian3); //att
+                .Remove(236, 4).Insert(236, hexLittleEndian3) //att
+                .Remove(272, 4).Insert(272, hexLittleEndian6) //compID
+                .Remove(28, 4).Insert(28, hexLittleEndian7) //strip1
+                .Remove(32, 4).Insert(32, hexLittleEndian8) //strip2
+                .Remove(36, 4).Insert(36, hexLittleEndian9) //strip3
+                .Remove(48, 4).Insert(48, hexLittleEndian10) //captid
+                .Remove(52, 4).Insert(52, hexLittleEndian11) //goalid
+                .Remove(56, 4).Insert(56, hexLittleEndian12) //playid
+                .Remove(40, 4).Insert(40, hexLittleEndian13) //logoid
+                .Remove(44, 4).Insert(44, hexLittleEndian14); //countid
+
 
 
             if (str5.Length != text1.Length)
@@ -1302,11 +1398,11 @@ namespace RC4Editor
                 string text1 = this.txtKitHex.Text; //original
                 this.txtkitName.Text = this.txtkitName.Text.Replace("-", "");
                 this.txtCollarID.Text = this.txtCollarID.Text.Replace("-", "");
-                string hex1 = this.ConvertStringToHex(this.txtkitName.Text, 40);
+                string hex1 = this.ConvertStringToHex(this.txtkitName.Text, 45);
                 string hex2 = txtCollarID.Text;
                 string hexLittleEndian6 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtNumberID.Text), 2);
                 string str5 =
-                   text1.Remove(62, 40).Insert(62, hex1) //name
+                   text1.Remove(62, 45).Insert(62, hex1) //name
                    .Remove(18, 2).Insert(18, hex2)
                    .Remove(12, 4).Insert(12, hexLittleEndian6);  //collar
                 textBox3.Text = str5;
@@ -1410,8 +1506,8 @@ namespace RC4Editor
                 this.txtSurname.Text = this.txtSurname.Text.Replace("-", "");
                 string hex1 = this.ConvertStringToHex(this.txtName.Text, 45);
                 string hex2 = this.ConvertStringToHex(this.txtSurname.Text, 45);
-                // string hexLittleEndian1 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtHeight.Text), 1);
-                // string hexLittleEndian2 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtWeight.Text), 1);
+                string hexLittleEndian1 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtHeight.Text), 1);
+                string hexLittleEndian2 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtWeight.Text), 1);
                 //string str1 = !this.chkLocked.Checked ? "00" : "01";2
                 string hexLittleEndian3 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFitness.Text), 2);
                 string hexLittleEndian4 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtSpeed.Text), 2);
@@ -1449,6 +1545,8 @@ namespace RC4Editor
                     .Remove(224, 4).Insert(224, hexLittleEndian4) //speed
                     .Remove(228, 4).Insert(228, hexLittleEndian5) //acceleration
                     .Remove(220, 4).Insert(220, hexLittleEndian6) //agility
+                    .Remove(364, 2).Insert(364, hexLittleEndian2) //weight
+                    .Remove(362, 2).Insert(362, hexLittleEndian1) //height
                     .Remove(284, 4).Insert(284, str2) //star
                     .Remove(232, 4).Insert(232, hexLittleEndian7) //aggresion
                     .Remove(240, 4).Insert(240, hexLittleEndian8) //break tackle
@@ -1464,8 +1562,8 @@ namespace RC4Editor
                     .Remove(276, 4).Insert(276, hexLittleEndian18) //discipline
                     .Remove(208, 4).Insert(208, hexLittleEndian19) //nationality
                     .Remove(16, 4).Insert(16, str3) //position15sp
-                    .Remove(40, 4).Insert(40, str4); //position7sp
-                   // .Remove(20, 4).Insert(24, str9); //secondpos15s
+                    .Remove(40, 4).Insert(40, str4) //position7sp
+                    .Remove(24 , 4).Insert(24, str9); //secondpos15s
 
                 this.txtChangedHex.Text = str5;
                 if (this.txtChangedHex.TextLength != this.txtOrgHEX.TextLength)
@@ -2277,6 +2375,18 @@ namespace RC4Editor
         private void button1_Click(object sender, EventArgs e)
         {
             saveSettings();
+        }
+
+        private void label66_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+        private void tbpFixtures_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
