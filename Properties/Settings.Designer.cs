@@ -244,13 +244,61 @@ namespace RC4Editor.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("E9035B49445F434F4D5045544954494F4E5F524F554E445D2031000000000000EA030000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E9030000E9035B49445F434F4D5045544954494F4E5F524F554E445D2031000000000000EA030000")]
         public string FixEnd {
             get {
                 return ((string)(this["FixEnd"]));
             }
             set {
                 this["FixEnd"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("E9030000ED9C78070000000000000000E903EA030400")]
+        public string CompStart {
+            get {
+                return ((string)(this["CompStart"]));
+            }
+            set {
+                this["CompStart"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"0100000002050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000305")]
+        public string CompEnd {
+            get {
+                return ((string)(this["CompEnd"]));
+            }
+            set {
+                this["CompEnd"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int CompStartInt {
+            get {
+                return ((int)(this["CompStartInt"]));
+            }
+            set {
+                this["CompStartInt"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int CompEndInt {
+            get {
+                return ((int)(this["CompEndInt"]));
+            }
+            set {
+                this["CompEndInt"] = value;
             }
         }
     }

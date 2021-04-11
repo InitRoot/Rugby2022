@@ -11,17 +11,19 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace RC4Editor
 {
- 
+
     public partial class frmMain : Form
     {
         String fileName;
         int PendingChanges = 0;
         ArrayList playerIDs = new ArrayList();
         private Thread workerThread = null;
-
+        public Dictionary<int, string> TeamsList = new Dictionary<int, string>();
+        public Dictionary<string, string> CompsList = new Dictionary<string, string>();
 
         public frmMain()
         {
@@ -226,16 +228,23 @@ namespace RC4Editor
 
                 //Fixtures
                 Properties.Settings.Default.FixStart = txtFixStart.Text;
-                Properties.Settings.Default.FixEnd = txtLinEndOff.Text;
+                Properties.Settings.Default.FixEnd = txtFixEnd.Text;
                 //Properties.Settings.Default.LinStartInt = Convert.ToInt32(txtLinStartOffInt.Text);
                 //Properties.Settings.Default.LinEndInt = Convert.ToInt32(txtLinEndOffInt.Text);
 
+                //Comps
+                Properties.Settings.Default.CompStart = txtCompStart.Text;
+                Properties.Settings.Default.CompEnd = txtCompEnd.Text;
+                Properties.Settings.Default.CompStartInt = Convert.ToInt32(txtCompStartint.Text);
+                Properties.Settings.Default.CompEndInt = Convert.ToInt32(txtCompEndInt.Text);
+
 
                 byte[] bplayers = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.PlayStart, Properties.Settings.Default.PlayEnd, Properties.Settings.Default.PlayStartInt, Properties.Settings.Default.PlayEndInt);
-                byte[] bteams = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.TeamsStart, Properties.Settings.Default.TeamsEnd, Properties.Settings.Default.TeamsStartInt, Properties.Settings.Default.TeamsEndInt); //not reading all the lineups
+                byte[] bteams = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.TeamsStart, Properties.Settings.Default.TeamsEnd, Properties.Settings.Default.TeamsStartInt, Properties.Settings.Default.TeamsEndInt);
                 byte[] blineup = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.LinStart, Properties.Settings.Default.LinEnd, Properties.Settings.Default.LinStartInt, Properties.Settings.Default.LinEndInt);
                 byte[] btkits = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.KitsStart, Properties.Settings.Default.KitsEnd, Properties.Settings.Default.KitsStartInt, Properties.Settings.Default.KitsEndint);
                 byte[] btfixtures = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.FixStart, Properties.Settings.Default.FixEnd, 0, 0);
+                byte[] btcomps = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.CompStart, Properties.Settings.Default.CompEnd, Properties.Settings.Default.CompStartInt, Properties.Settings.Default.CompEndInt);
 
 
                 //We create a new byte lists of each record, includes the size per record in bytes
@@ -244,6 +253,7 @@ namespace RC4Editor
                 List<byte[]> teamssp = splitDataToByteArray(bteams, 212);
                 List<byte[]> kitssp = splitDataToByteArray(btkits, 280);
                 List<byte[]> fixssp = splitDataToByteArray(btfixtures, 16);
+                List<byte[]> compssp = splitDataToByteArray(btcomps, 100);
 
                 //We load each list of bytes into our database
                 loadSplittedHEXtoDB(playerssp, "players");
@@ -251,6 +261,7 @@ namespace RC4Editor
                 loadSplittedHEXtoDB(teamssp, "teams");
                 loadSplittedHEXtoDB(kitssp, "kits");
                 loadSplittedHEXtoDB(fixssp, "fixtures");
+                loadSplittedHEXtoDB(compssp, "comps");
 
                 //Now we populate our lists using the data from the database
                 populateViews();
@@ -287,7 +298,14 @@ namespace RC4Editor
 
             //Fixtures
             txtFixStart.Text = Properties.Settings.Default.FixStart;
-            txtLinEndOff.Text = Properties.Settings.Default.FixEnd;
+            txtFixEnd.Text = Properties.Settings.Default.FixEnd;
+
+            //Comps
+            txtCompStart.Text = Properties.Settings.Default.CompStart;
+            txtCompEnd.Text = Properties.Settings.Default.CompEnd;
+            txtCompStartint.Text = Properties.Settings.Default.CompStartInt.ToString();
+            txtCompEndInt.Text = Properties.Settings.Default.CompEndInt.ToString();
+
         }
 
         private void saveSettings()
@@ -299,10 +317,10 @@ namespace RC4Editor
             Properties.Settings.Default.PlayEndInt = Convert.ToInt32(txtPlayEndOffInt.Text);
 
             //Teams
-             Properties.Settings.Default.TeamsStart = txtTeamStartOff.Text;
-             Properties.Settings.Default.TeamsEnd = txtTeamEndOff.Text;
-             Properties.Settings.Default.TeamsStartInt = Convert.ToInt32(txtTeamStartOffInt.Text);
-             Properties.Settings.Default.TeamsEndInt= Convert.ToInt32(txtTeamEndOffInt.Text);
+            Properties.Settings.Default.TeamsStart = txtTeamStartOff.Text;
+            Properties.Settings.Default.TeamsEnd = txtTeamEndOff.Text;
+            Properties.Settings.Default.TeamsStartInt = Convert.ToInt32(txtTeamStartOffInt.Text);
+            Properties.Settings.Default.TeamsEndInt = Convert.ToInt32(txtTeamEndOffInt.Text);
 
             //Kits
             Properties.Settings.Default.KitsStart = txtKitsStartOff.Text;
@@ -318,37 +336,87 @@ namespace RC4Editor
 
             //Fixtures
             Properties.Settings.Default.FixStart = txtFixStart.Text;
-            Properties.Settings.Default.FixEnd = txtLinEndOff.Text;
+            Properties.Settings.Default.FixEnd = txtFixEnd.Text;
+
+
+            //Comps
+            Properties.Settings.Default.CompStart = txtCompStart.Text;
+            Properties.Settings.Default.CompEnd = txtCompEnd.Text;
+            Properties.Settings.Default.CompStartInt = Convert.ToInt32(txtCompStartint.Text);
+            Properties.Settings.Default.CompEndInt = Convert.ToInt32(txtCompEndInt.Text);
 
             loadSettings();
         }
         private void loadPostWrite()
         {
             //We first load each table from the database in their HEX values
-            byte[] bplayers = GetPlayerBytesFromFile(fileName);
-            byte[] blineup = GetLineUpBytesFromFile(fileName);
-            byte[] bteams = GetTeamsBytesFromFile(fileName);
-            byte[] btkits = GetKitsBytesFromFile(fileName);
+            //We first load each table from the database in their HEX values
+            //Players
+            Properties.Settings.Default.KitsStart = txtPlayStartOff.Text;
+            Properties.Settings.Default.KitsEnd = txtPlayEndOff.Text;
+            Properties.Settings.Default.PlayStartInt = Convert.ToInt32(txtPlayStartOffInt.Text);
+            Properties.Settings.Default.PlayEndInt = Convert.ToInt32(txtPlayEndOffInt.Text);
+
+            //Teams
+            Properties.Settings.Default.TeamsStart = txtTeamStartOff.Text;
+            Properties.Settings.Default.TeamsEnd = txtTeamEndOff.Text;
+            Properties.Settings.Default.TeamsStartInt = Convert.ToInt32(txtTeamStartOffInt.Text);
+            Properties.Settings.Default.TeamsEndInt = Convert.ToInt32(txtTeamEndOffInt.Text);
+
+            //Kits
+            Properties.Settings.Default.KitsStart = txtKitsStartOff.Text;
+            Properties.Settings.Default.KitsEnd = txtKitsEndOff.Text;
+            Properties.Settings.Default.KitsStartInt = Convert.ToInt32(txtKitsStartOffInt.Text);
+            Properties.Settings.Default.KitsEndint = Convert.ToInt32(txtKitsEndOffInt.Text);
+
+            //Lineups
+            Properties.Settings.Default.LinStart = txtLinStartOff.Text;
+            Properties.Settings.Default.LinEnd = txtLinEndOff.Text;
+            Properties.Settings.Default.LinStartInt = Convert.ToInt32(txtLinStartOffInt.Text);
+            Properties.Settings.Default.LinEndInt = Convert.ToInt32(txtLinEndOffInt.Text);
+            //Fixtures
+            Properties.Settings.Default.FixStart = txtFixStart.Text;
+            Properties.Settings.Default.FixEnd = txtFixEnd.Text;
+            //Properties.Settings.Default.LinStartInt = Convert.ToInt32(txtLinStartOffInt.Text);
+            //Properties.Settings.Default.LinEndInt = Convert.ToInt32(txtLinEndOffInt.Text);
+
+
+            //Comps
+            Properties.Settings.Default.CompStart = txtCompStart.Text;
+            Properties.Settings.Default.CompEnd = txtCompEnd.Text;
+            Properties.Settings.Default.CompStartInt = Convert.ToInt32(txtCompStartint.Text);
+            Properties.Settings.Default.CompEndInt = Convert.ToInt32(txtCompEndInt.Text);
+
+
+            byte[] bplayers = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.PlayStart, Properties.Settings.Default.PlayEnd, Properties.Settings.Default.PlayStartInt, Properties.Settings.Default.PlayEndInt);
+            byte[] bteams = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.TeamsStart, Properties.Settings.Default.TeamsEnd, Properties.Settings.Default.TeamsStartInt, Properties.Settings.Default.TeamsEndInt);
+            byte[] blineup = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.LinStart, Properties.Settings.Default.LinEnd, Properties.Settings.Default.LinStartInt, Properties.Settings.Default.LinEndInt);
+            byte[] btkits = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.KitsStart, Properties.Settings.Default.KitsEnd, Properties.Settings.Default.KitsStartInt, Properties.Settings.Default.KitsEndint);
+            byte[] btfixtures = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.FixStart, Properties.Settings.Default.FixEnd, 0, 0);
+            byte[] btcomps = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.CompStart, Properties.Settings.Default.CompEnd, Properties.Settings.Default.CompStartInt, Properties.Settings.Default.CompEndInt);
 
             //We create a new byte lists of each record, includes the size per record in bytes
             List<byte[]> playerssp = splitDataToByteArray(bplayers, 1348);
             List<byte[]> lineupssp = splitDataToByteArray(blineup, 776);
             List<byte[]> teamssp = splitDataToByteArray(bteams, 212);
             List<byte[]> kitssp = splitDataToByteArray(btkits, 280);
+            List<byte[]> fixssp = splitDataToByteArray(btfixtures, 16);
+            List<byte[]> compssp = splitDataToByteArray(btcomps, 100);
 
             //We load each list of bytes into our database
             loadSplittedHEXtoDB(playerssp, "players");
             loadSplittedHEXtoDB(lineupssp, "lineups");
             loadSplittedHEXtoDB(teamssp, "teams");
             loadSplittedHEXtoDB(kitssp, "kits");
-
+            loadSplittedHEXtoDB(fixssp, "fixtures");
+            loadSplittedHEXtoDB(compssp, "comps");
             //Now we populate our lists using the data from the database
             populateViews();
 
 
         }
 
-        public byte[] GetGlobalBytesFromFile(string fullFilePath,string posStartStr, string posEndStr, int ExtaStr, int ExtraEnd)
+        public byte[] GetGlobalBytesFromFile(string fullFilePath, string posStartStr, string posEndStr, int ExtaStr, int ExtraEnd)
         {
 
             int posEnd = 0;
@@ -358,7 +426,7 @@ namespace RC4Editor
             posStart = Search(buff, StringToByteArray(posStartStr));
             posStart = posStart + ExtaStr;
             posEnd = Search(buff, StringToByteArray(posEndStr));
-            //MessageBox.Show(posEnd.ToString());
+            // MessageBox.Show(posEnd.ToString());
             posEnd = posEnd + ExtraEnd;
             byte[] slice = Extensions.ArraySlice(buff, posStart, posEnd);
             return slice;
@@ -375,7 +443,7 @@ namespace RC4Editor
             //posStart = posStart + 64;
             // MessageBox.Show(posStart.ToString());
             posEnd = Search(buff, StringToByteArray("E9030000ED9C78070000000000000000E903"));
-             //MessageBox.Show(posEnd.ToString());
+            //MessageBox.Show(posEnd.ToString());
             byte[] slice = Extensions.ArraySlice(buff, posStart, posEnd);
             return slice;
 
@@ -393,7 +461,7 @@ namespace RC4Editor
             //MessageBox.Show(posStart.ToString());
             //01000000A754785A020000008606795A030000000856775A0400000039077A5AE90300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D000000
             posEnd = Search(buff, StringToByteArray("E90300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000EA0300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000EB0300001E000000E803000014000000280000000500000032000000190000007D0000000A000000C80000000A0000007D00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000EC0300001E000000EE0200001400000019000000050000001400000014000000C80000000F000000960000000A000000FA00000002000000320000000300000032000000030000003200000019000000E204000064000000102700000500000003000000ED0300001E000000EE02"));
-           // posEnd = posEnd - 776;
+            // posEnd = posEnd - 776;
             //MessageBox.Show(posEnd.ToString());
             byte[] slice = Extensions.ArraySlice(buff, posStart, posEnd);
             return slice;
@@ -408,10 +476,10 @@ namespace RC4Editor
             buff = File.ReadAllBytes(fullFilePath);
             posStart = Search(buff, StringToByteArray("FF005553412057377300000000000000000000000000000000000000000000000000723773775F75736100000000"));
             posStart = posStart + 46; //we have to adjust as we perform the lookup before the table starts
-           // MessageBox.Show(posStart.ToString());
+                                      // MessageBox.Show(posStart.ToString());
             posEnd = Search(buff, StringToByteArray("EA030000000827060200000000001000000010000200000000001000000010000000000000000000000000000000"));
             //posEnd = posEnd - 212;
-           // MessageBox.Show(posEnd.ToString());
+            // MessageBox.Show(posEnd.ToString());
             byte[] slice = Extensions.ArraySlice(buff, posStart, posEnd);
             return slice;
 
@@ -425,7 +493,7 @@ namespace RC4Editor
             buff = File.ReadAllBytes(fullFilePath);
             posStart = Search(buff, StringToByteArray("E3030000240124010100479C581342770000005F0A"));
             posStart = posStart; //we have to adjust as we perform the lookup before the table starts
-                                      // MessageBox.Show(posStart.ToString());
+                                 // MessageBox.Show(posStart.ToString());
             posEnd = Search(buff, StringToByteArray("E90300000018F50500005089E90300002D00000000000153696D6F6E2043756C68616E6500000000"));
             //posEnd = posEnd - 212;
             // MessageBox.Show(posEnd.ToString());
@@ -442,7 +510,7 @@ namespace RC4Editor
          * #####################################################################################################
          * #####################################################################################################
          */
-        private static List<byte[]> splitDataToByteArray(byte[] longString,int size)
+        private static List<byte[]> splitDataToByteArray(byte[] longString, int size)
         {
             byte[] source = longString;
             List<byte[]> result = new List<byte[]>();
@@ -456,7 +524,7 @@ namespace RC4Editor
         }
 
         //The below requires the table adapter to be added onto the form.
-        private void loadSplittedHEXtoDB(List<byte[]> bytelist,String dataType)
+        private void loadSplittedHEXtoDB(List<byte[]> bytelist, String dataType)
         {
             switch (dataType)
             {
@@ -464,21 +532,21 @@ namespace RC4Editor
                     tblPlayersHexTableAdapter.ClearTable();
                     for (int i = 0; i < bytelist.Count; i++)
                     {
-                        tblPlayersHexTableAdapter.Insert(i,ToHexString(bytelist[i]), "", null);
+                        tblPlayersHexTableAdapter.Insert(i, ToHexString(bytelist[i]), "", null);
                     }
                     break;
                 case "lineups":
                     tblLineUpsHexTableAdapter.ClearTable();
                     for (int i = 0; i < bytelist.Count; i++)
                     {
-                        tblLineUpsHexTableAdapter.Insert(i, ToHexString(bytelist[i]), "",null);
+                        tblLineUpsHexTableAdapter.Insert(i, ToHexString(bytelist[i]), "", null);
                     }
                     break;
                 case "teams":
                     tblTeamsHexTableAdapter.ClearTable();
                     for (int i = 0; i < bytelist.Count; i++)
                     {
-                        tblTeamsHexTableAdapter.Insert(i, ToHexString(bytelist[i]), "",null);
+                        tblTeamsHexTableAdapter.Insert(i, ToHexString(bytelist[i]), "", null);
                     }
                     break;
                 case "kits":
@@ -495,11 +563,18 @@ namespace RC4Editor
                         tblFixturesTableAdapter.Insert(i, ToHexString(bytelist[i]), "", null);
                     }
                     break;
+                case "comps":
+                    tblCompsTableAdapter1.ClearTable();
+                    for (int i = 0; i < bytelist.Count; i++)
+                    {
+                        tblCompsTableAdapter1.Insert(i, ToHexString(bytelist[i]), "", null);
+                    }
+                    break;
                 default:
                     MessageBox.Show("Error! Data not inserted, coding error!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
-            
+
         }
 
         //Reads the data from our tables then populates our listviews.
@@ -516,6 +591,10 @@ namespace RC4Editor
             objListViewTeams.Items.Clear();
             objListViewTeams2.Items.Clear();
             objKitTeamView.Items.Clear();
+            lstFixtures.Items.Clear();
+            TeamsList.Clear();
+            lstComp.Items.Clear();
+            CompsList.Clear();
 
             //Let's load our type list with get:set methods
             List<Players> playersListEditor = new List<Players>();
@@ -590,6 +669,7 @@ namespace RC4Editor
 
             if (tblTeamsHexTableAdapter.GetData().Count != 0)
             {
+
                 //DataVariables
                 int i = 0;
                 int rwindex = 0;
@@ -618,6 +698,9 @@ namespace RC4Editor
                     //Populates our view arrays
                     teamsListEditor.Add(new Teams(teamID, teamName, rwindex));
 
+                    //Add to our global dictionary
+                    TeamsList.Add(Convert.ToInt16(teamID), teamName);
+
                     //Add the IDs to our dataset
                     dr[3] = teamID;
                     tblTeamsHexTableAdapter.Update(dr);
@@ -630,7 +713,7 @@ namespace RC4Editor
                 objListViewTeams2.SetObjects(teamsListEditor);
             }
 
-            if (tblKitsHexTableAdapter.GetData().Count != 0)
+            if (tblLineUpsHexTableAdapter.GetData().Count != 0)
             {
                 //DataVariables
                 int i = 0;
@@ -664,7 +747,7 @@ namespace RC4Editor
 
             if (tblKitsHexTableAdapter.GetData().Count != 0)
             {
-   
+
                 //DataVariables
                 int i = 0;
                 int rwindex = 0;
@@ -690,7 +773,7 @@ namespace RC4Editor
                     kitName = HexString2Ascii(ToHexString(bufferName)).Replace("\0", string.Empty);
                     kitID = GetLittleEndianIntegerFromByteArray(btKitID).ToString();
 
-                   
+
                     //Populates our view arrays
                     kitsListEditor.Add(new Kits(kitID, kitName, rwindex));
 
@@ -702,6 +785,106 @@ namespace RC4Editor
                 }
 
                 objKitTeamView.SetObjects(kitsListEditor);
+
+            }
+
+            if (tblFixturesTableAdapter.GetData().Count != 0)
+            {
+
+                //DataVariables
+                int i = 0;
+                int rwindex = 0;
+                foreach (DataRow dr in tblFixturesTableAdapter.GetData())
+                {
+                    rwindex = i;
+                    String fixRound = "";
+                    string fixID = "";
+                    int home = 0;
+                    int away = 0;
+                    //Reads HEX datarow as source byte
+                    byte[] source = StringToByteArray(dr.ItemArray[1].ToString());
+
+                    //initialise bytes with correct sizes
+                    //byte[] bufferName = new byte[25];
+                    byte[] btFixID = new byte[2];
+                    byte[] bffixTeamAway = new byte[2];
+                    byte[] bffixTeamHome = new byte[2];
+
+                    //Copy bytes out of the source
+                    // Buffer.BlockCopy(source, 31, bufferName, 0, 25);
+                    Buffer.BlockCopy(source, 0, btFixID, 0, 2);
+                    Buffer.BlockCopy(source, 12, bffixTeamAway, 0, 2);
+                    Buffer.BlockCopy(source, 10, bffixTeamHome, 0, 2);
+
+                    //Converts extracted values to the required formats
+                    fixID = GetLittleEndianIntegerFromByteArray(btFixID).ToString();
+                    away = GetLittleEndianIntegerFromByteArray(bffixTeamAway);
+                    home = GetLittleEndianIntegerFromByteArray(bffixTeamHome);
+
+                    //Populates our view arrays
+                    TeamsList.TryGetValue(home, out string teamhome);
+                    TeamsList.TryGetValue(away, out string teamaway);
+
+                    String addFix = fixID + " " + teamhome + " vs. " + teamaway;
+
+                    lstFixtures.Items.Add(addFix);
+
+                    //Add the IDs to our dataset
+                    dr[3] = fixID;
+                    tblFixturesTableAdapter.Update(dr);
+
+                    i++;
+                }
+
+                //objKitTeamView.SetObjects(kitsListEditor);
+
+            }
+
+            if (tblCompsTableAdapter1.GetData().Count != 0)
+            {
+
+                //DataVariables
+                int i = 0;
+                int rwindex = 0;
+                foreach (DataRow dr in tblCompsTableAdapter1.GetData())
+                {
+                    rwindex = i;
+                    String Name = "";
+                    string compID = "";
+                    int edible = 0;
+
+                    //Reads HEX datarow as source byte
+                    byte[] source = StringToByteArray(dr.ItemArray[1].ToString());
+
+                    //initialise bytes with correct sizes
+                    //byte[] bufferName = new byte[25];
+                    byte[] bfcompID = new byte[2];
+                    byte[] bffCompEdb = new byte[1];
+                    byte[] bfCompName = new byte[34];
+
+                    //Copy bytes out of the source
+                    // Buffer.BlockCopy(source, 31, bufferName, 0, 25);
+                    Buffer.BlockCopy(source, 0, bfcompID, 0, 2);
+                    Buffer.BlockCopy(source, 37, bffCompEdb, 0, 1);
+                    Buffer.BlockCopy(source, 61, bfCompName, 0, 34);
+
+                    //Converts extracted values to the required formats
+                    compID = GetLittleEndianIntegerFromByteArray(bfcompID).ToString();
+                    Name = HexString2Ascii(ToHexString(bfCompName)).Replace("\0", string.Empty);
+                    edible = GetLittleEndianIntegerFromByteArray(bffCompEdb);
+
+                    String addComp = compID + " " + Name;
+
+                    lstComp.Items.Add(addComp);
+
+                    //Add the IDs to our dataset
+                    dr[3] = compID;
+                    tblCompsTableAdapter1.Update(dr);
+
+                    i++;
+                }
+
+                //objKitTeamView.SetObjects(kitsListEditor);
 
             }
 
@@ -849,8 +1032,8 @@ namespace RC4Editor
             plateamIDyerID = GetLittleEndianIntegerFromByteArray(bfplateamIDyerID);
             TeamName = HexString2Ascii(tmnamehex).Replace("\0", string.Empty);
             ShortName = HexString2Ascii(ToHexString(bfShortName)).Replace("\0", string.Empty);
-             deflinedepth = GetLittleEndianIntegerFromByteArray(bfdeflinedepth); 
-             midlinedepth = GetLittleEndianIntegerFromByteArray(bfmidlinedepth);
+            deflinedepth = GetLittleEndianIntegerFromByteArray(bfdeflinedepth);
+            midlinedepth = GetLittleEndianIntegerFromByteArray(bfmidlinedepth);
             attlinedepth = GetLittleEndianIntegerFromByteArray(bfattlinedepth);
             compcarID2 = GetLittleEndianIntegerFromByteArray(bfcompcarID2);
             compcarID1 = GetLittleEndianIntegerFromByteArray(bfcompcarID1);
@@ -864,9 +1047,9 @@ namespace RC4Editor
             logoid = GetLittleEndianIntegerFromByteArray(bflogoid);
             countid = GetLittleEndianIntegerFromByteArray(bfcountid);
 
-            deflinedepth = deflinedepth/100;
-            midlinedepth = midlinedepth/100;
-            attlinedepth = attlinedepth/100;
+            deflinedepth = deflinedepth / 100;
+            midlinedepth = midlinedepth / 100;
+            attlinedepth = attlinedepth / 100;
 
             txtTeamID.Text = plateamIDyerID.ToString();
             txtTeamName.Text = TeamName;
@@ -886,6 +1069,86 @@ namespace RC4Editor
             txtteamlogiID.Text = logoid.ToString();
             txtteamassoccountID.Text = countid.ToString();
 
+        }
+
+        public void loadFixtureData(string ktHEX)
+        {
+
+            // All variables
+            int fixTeamHome = 0;
+            int roundNumber = 0;
+            int fixTeamAway = 0;
+            int fixID = 0;
+            int compID = 0;
+
+            byte[] source = StringToByteArray(ktHEX);
+            byte[] bffixTeamHome = new byte[2]; //Checked
+            byte[] bfroundNumber = new byte[2]; //Checked
+            byte[] bffixTeamAway = new byte[2]; //Checked
+            byte[] bffixID = new byte[2]; //Checked
+            byte[] bfCompID = new byte[2]; //Checked
+
+
+            //Extracts the values from the hex into our byte values
+            Buffer.BlockCopy(source, 0, bffixID, 0, 2);
+            Buffer.BlockCopy(source, 12, bffixTeamAway, 0, 2);
+            Buffer.BlockCopy(source, 8, bfCompID, 0, 2);
+            Buffer.BlockCopy(source, 10, bffixTeamHome, 0, 2);
+            Buffer.BlockCopy(source, 6, bfroundNumber, 0, 2);
+
+            //Converts extracted values to the required formats
+            fixID = GetLittleEndianIntegerFromByteArray(bffixID);
+            fixTeamAway = GetLittleEndianIntegerFromByteArray(bffixTeamAway);
+            fixTeamHome = GetLittleEndianIntegerFromByteArray(bffixTeamHome);
+            roundNumber = GetLittleEndianIntegerFromByteArray(bfroundNumber);
+            compID = GetLittleEndianIntegerFromByteArray(bfCompID);
+
+
+            //Add labels
+            TeamsList.TryGetValue(fixTeamHome, out string teamhome);
+            TeamsList.TryGetValue(fixTeamAway, out string teamaway);
+
+            //Populate gui
+            txtFixID.Text = fixID.ToString();
+            txtFixHome.Text = fixTeamHome.ToString();
+            txtFixAway.Text = fixTeamAway.ToString();
+            txtFixRound.Text = roundNumber.ToString();
+            txtFixtureHEX.Text = ktHEX;
+            lblAway.Text = teamaway;
+            lblHome.Text = teamhome;
+            txtFixCompID.Text = compID.ToString(); //This value is still unkown 04/02/2021
+
+        }
+
+        public void loadCompData(string cpHEX)
+        {
+
+            String CompName = "";
+            int edible = 0;
+            String compID = "";
+
+            //initialise bytes with correct sizes
+            //byte[] bufferName = new byte[25];
+            byte[] bfcompID = new byte[2];
+            byte[] bffCompEdb = new byte[1];
+            byte[] bfCompName = new byte[34];
+
+            //Copy bytes out of the source
+            byte[] source = StringToByteArray(cpHEX);
+            Buffer.BlockCopy(source, 0, bfcompID, 0, 2);
+            Buffer.BlockCopy(source, 37, bffCompEdb, 0, 1);
+            Buffer.BlockCopy(source, 61, bfCompName, 0, 34);
+
+            //Converts extracted values to the required formats
+            compID = GetLittleEndianIntegerFromByteArray(bfcompID).ToString();
+            Name = HexString2Ascii(ToHexString(bfCompName)).Replace("\0", string.Empty);
+            edible = GetLittleEndianIntegerFromByteArray(bffCompEdb);
+
+            //Populate gui
+            txtCompName.Text = Name.ToString();
+            txtCompEdible.Text = edible.ToString();
+            txtCompID.Text = compID.ToString();
+            txtCompHEX.Text = cpHEX;
         }
 
         public void loadKitData(string ktHEX)
@@ -926,7 +1189,6 @@ namespace RC4Editor
             txtKitHex.Text = ktHEX;
 
         }
-
         public void populatePlayerDetails(string playerHEX)
         {
             chkDummyPlayer.Checked = false;
@@ -993,8 +1255,8 @@ namespace RC4Editor
             byte[] btjump = new byte[2];
             byte[] btDiscpl = new byte[2];
             byte[] btNationID = new byte[2]; //Checked
-            //    byte[] btHeadID = new byte[1];
-            //    byte[] btFaceID = new byte[2];
+            byte[] btHeadID = new byte[1];
+            byte[] btFaceID = new byte[2];
             //    byte[] btHairID = new byte[2];
             //    byte[] btBeardID = new byte[2];
             byte[] btPposID = new byte[2];
@@ -1008,8 +1270,8 @@ namespace RC4Editor
             Buffer.BlockCopy(source, 0, playID, 0, 2);
             Buffer.BlockCopy(source, 220, bufferName, 0, 25);
             Buffer.BlockCopy(source, 245, bufferSurname, 0, 25);
-            Buffer.BlockCopy(source,181, btHeight, 0,1);
-            Buffer.BlockCopy(source,182, btWeight, 0,1);
+            Buffer.BlockCopy(source, 181, btHeight, 0, 1);
+            Buffer.BlockCopy(source, 182, btWeight, 0, 1);
             // Buffer.BlockCopy(source,, btLck, 0,);
             Buffer.BlockCopy(source, 108, btFIT, 0, 2);
             Buffer.BlockCopy(source, 112, btSPD, 0, 2);
@@ -1029,8 +1291,8 @@ namespace RC4Editor
             Buffer.BlockCopy(source, 136, btjump, 0, 2);
             Buffer.BlockCopy(source, 138, btDiscpl, 0, 2);
             Buffer.BlockCopy(source, 104, btNationID, 0, 2);
-            //   Buffer.BlockCopy(source,, btHeadID, 0,);
-            //   Buffer.BlockCopy(source,, btFaceID, 0,);
+            Buffer.BlockCopy(source, 152, btHeadID, 0, 1);
+            Buffer.BlockCopy(source, 145, btFaceID, 0, 2);
             //   Buffer.BlockCopy(source,, btHairID, 0,);
             //   Buffer.BlockCopy(source,, btBeardID, 0,);
             Buffer.BlockCopy(source, 8, btPposID, 0, 2);
@@ -1065,8 +1327,8 @@ namespace RC4Editor
             jumping = GetLittleEndianIntegerFromByteArray(btjump);
             discpl = GetLittleEndianIntegerFromByteArray(btDiscpl);
             nationID = GetLittleEndianIntegerFromByteArray(btNationID);
-            //    headID = GetLittleEndianIntegerFromByteArray(btHeadID);
-            //    faceID = GetLittleEndianIntegerFromByteArray(btFaceID);
+            headID = GetLittleEndianIntegerFromByteArray(btHeadID);
+            faceID = GetLittleEndianIntegerFromByteArray(btFaceID);
             //    hairID = GetLittleEndianIntegerFromByteArray(btHairID);
             //    facialID = GetLittleEndianIntegerFromByteArray(btBeardID);
             PrimPosID = GetLittleEndianIntegerFromByteArray(btPposID);
@@ -1102,8 +1364,8 @@ namespace RC4Editor
             txtJump.Text = jumping.ToString();
             txtDiscp.Text = discpl.ToString();
             selectNation(nationID);
-            //      txtHeadID.Text = headID.ToString();
-            //      txtFaceID.Text = faceID.ToString();
+            txtHeadID.Text = headID.ToString();
+            txtFaceID.Text = faceID.ToString();
             //       txtHair.Text = hairID.ToString();
             //       txtFacialHair.Text = facialID.ToString();
             cmbPositions.SelectedItem = getPosition(PrimPosID);
@@ -1113,13 +1375,12 @@ namespace RC4Editor
             //      txtSkin.Text = skinID.ToString();
             cmbSecondaryPositions.SelectedItem = getPosition(SecPosID);
         }
-
         public String DBGetPlayerHEXbyID(int plID)
         {
             String HEX = "";
 
             if (tblPlayersHexTableAdapter.GetDataByRecordID(plID).Count < 2)
-            {           
+            {
                 foreach (DataRow dr in tblPlayersHexTableAdapter.GetDataByRecordID(plID))
                 {
                     HEX = (dr.ItemArray[1].ToString());
@@ -1259,7 +1520,6 @@ namespace RC4Editor
             return FullName;
 
         }
-
         public String DBGetTeamHEXbyID(int plID)
         {
             String HEX = "";
@@ -1278,7 +1538,43 @@ namespace RC4Editor
             return HEX;
 
         }
+        public String DBGetFixtureHEXbyID(int plID)
+        {
+            String HEX = "";
 
+            if (tblFixturesTableAdapter.GetDataByRecordID(plID).Count < 2)
+            {
+                foreach (DataRow dr in tblFixturesTableAdapter.GetDataByRecordID(plID))
+                {
+                    HEX = (dr.ItemArray[1].ToString());
+                }
+            }
+            else
+            {
+                MessageBox.Show("Mutliple records matched. Error! Contact developer!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return HEX;
+
+        }
+
+        public String DBGetCompHEXbyID(int plID)
+        {
+            String HEX = "";
+
+            if (tblCompsTableAdapter1.GetDataByRecordID(plID).Count < 2)
+            {
+                foreach (DataRow dr in tblCompsTableAdapter1.GetDataByRecordID(plID))
+                {
+                    HEX = (dr.ItemArray[1].ToString());
+                }
+            }
+            else
+            {
+                MessageBox.Show("Mutliple records matched. Error! Contact developer!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return HEX;
+
+        }
         public String DBGetKitHEXbyID(int plID)
         {
             String HEX = "";
@@ -1297,7 +1593,6 @@ namespace RC4Editor
             return HEX;
 
         }
-
         public String DBGetLineUpsHEXbyTeamID(int tmID)
         {
             String HEX = "";
@@ -1307,15 +1602,15 @@ namespace RC4Editor
                 StringBuilder sb = new StringBuilder();
                 foreach (DataRow dr in tblLineUpsHexTableAdapter.GetDataByTeamID(tmID))
                 {
-                   
 
-                        sb.AppendLine(string.Join(",", dr.ItemArray));
-                    
-                    
+
+                    sb.AppendLine(string.Join(",", dr.ItemArray));
+
+
                     HEX = (dr.ItemArray[1].ToString());
                 }
 
-              //  MessageBox.Show(sb.ToString());
+                //  MessageBox.Show(sb.ToString());
             }
             else
             {
@@ -1424,6 +1719,73 @@ namespace RC4Editor
 
         }
 
+        public void saveFixturesHex()
+        {
+            if (txtFixID.Text != "1001")
+            {
+                string text1 = this.txtFixtureHEX.Text; //original
+
+                string hexLittleEndian1 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFixHome.Text), 2);
+                string hexLittleEndian2 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFixAway.Text), 2);
+                string hexLittleEndian3 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFixRound.Text), 2);
+                string hexLittleEndian4 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFixCompID.Text), 2);
+
+                string str5 =
+                   text1.Remove(20, 4).Insert(20, hexLittleEndian1) //home
+                   .Remove(24, 4).Insert(24, hexLittleEndian2) //away
+                   .Remove(16, 4).Insert(16, hexLittleEndian4) //compID
+                   .Remove(12, 4).Insert(12, hexLittleEndian3);  //roundID
+                textBox3.Text = str5;
+
+
+                if (str5.Length != text1.Length)
+                {
+                    int num = (int)MessageBox.Show("Error - Hex sizes do not match.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    tblFixturesTableAdapter.UpdateQueryModHex(str5, text1);
+                    PendingChanges = PendingChanges + 1;
+                    statusToolstrip.Text = PendingChanges.ToString() + " changes pending to be written to DB!!";
+
+                }
+
+            }
+
+        }
+
+        public void saveCompsHex()
+        {
+            if (txtCompID.Text != "1001")
+            {
+                string text1 = this.txtCompHEX.Text; //original
+                string hexLittleEndian1 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtCompID.Text), 2);
+                string hexLittleEndian2 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtCompEdible.Text), 1);
+                this.txtCompName.Text = this.txtCompName.Text.Replace("-", "");
+                string hex1 = this.ConvertStringToHex(this.txtCompName.Text, 34);
+
+                string str5 =
+                   text1.Remove(74, 2).Insert(74, hexLittleEndian2) //edible
+                   .Remove(122, 68).Insert(122, hex1); //name 
+                txtCompModHEX.Text = str5;
+
+
+                if (str5.Length != text1.Length)
+                {
+                    int num = (int)MessageBox.Show("Error - Hex sizes do not match.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    tblCompsTableAdapter1.UpdateQueryModHex(str5, text1);
+                    PendingChanges = PendingChanges + 1;
+                    statusToolstrip.Text = PendingChanges.ToString() + " changes pending to be written to DB!!";
+
+                }
+
+            }
+
+        }
+
         public void saveLineUpsHex()
         {
             string orglineupHEX = this.txtLineupOrgHEX.Text;
@@ -1447,7 +1809,7 @@ namespace RC4Editor
                 {
                     string hexLittleEndianplayID = this.decimalToHexLittleEndian((int)Convert.ToInt16(playerID), 2);
                     moddedHex = modlineupHEX.Remove(byteset, 4).Insert(byteset, hexLittleEndianplayID);
-            
+
                 }
                 byteset += 4;
                 i = i++;
@@ -1467,7 +1829,7 @@ namespace RC4Editor
                 statusToolstrip.Text = PendingChanges.ToString() + " changes pending to be written to DB!!";
             }
         }
-        
+
         public void savePlayerHEX()
         {
             if (txtPlayID.Text != "1002")
@@ -1527,12 +1889,12 @@ namespace RC4Editor
                 string hexLittleEndian17 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtJump.Text), 2);
                 string hexLittleEndian18 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtDiscp.Text), 2);
                 string hexLittleEndian19 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.nationStrToID(this.cmbNations.SelectedItem.ToString())), 2);
-                //string hexLittleEndian20 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtHeadID.Text), 1);
+                string hexLittleEndian20 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtHeadID.Text), 1);
                 string str3 = this.RCPOStoID(this.cmbPositions.SelectedItem.ToString());
                 string str4 = this.RCPOStoID(this.cmbPositions7.SelectedItem.ToString());
                 //string hexLittleEndian21 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtIntBoot.Text) - 1, 1);
                 //string hexLittleEndian22 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtClubBoot.Text) - 1, 1);
-                //string hexLittleEndian23 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFaceID.Text), 2);
+                string hexLittleEndian23 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFaceID.Text), 2);
                 //string hexLittleEndian24 = this.decimalToHexLittleEndian(Convert.ToInt32(this.txtHair.Text), 2);
                 //string hexLittleEndian25 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtFacialHair.Text), 2);
                 //string hexLittleEndian26 = this.decimalToHexLittleEndian((int)Convert.ToInt16(this.txtSkin.Text), 1);
@@ -1548,6 +1910,8 @@ namespace RC4Editor
                     .Remove(364, 2).Insert(364, hexLittleEndian2) //weight
                     .Remove(362, 2).Insert(362, hexLittleEndian1) //height
                     .Remove(284, 4).Insert(284, str2) //star
+                    .Remove(304, 2).Insert(304, hexLittleEndian20) //headID
+                                                                   //.Remove(290, 4).Insert(290, hexLittleEndian23) //faceID error at the moment
                     .Remove(232, 4).Insert(232, hexLittleEndian7) //aggresion
                     .Remove(240, 4).Insert(240, hexLittleEndian8) //break tackle
                     .Remove(236, 4).Insert(236, hexLittleEndian9) //tackle
@@ -1563,7 +1927,7 @@ namespace RC4Editor
                     .Remove(208, 4).Insert(208, hexLittleEndian19) //nationality
                     .Remove(16, 4).Insert(16, str3) //position15sp
                     .Remove(40, 4).Insert(40, str4) //position7sp
-                    .Remove(24 , 4).Insert(24, str9); //secondpos15s
+                    .Remove(24, 4).Insert(24, str9); //secondpos15s
 
                 this.txtChangedHex.Text = str5;
                 if (this.txtChangedHex.TextLength != this.txtOrgHEX.TextLength)
@@ -1634,10 +1998,43 @@ namespace RC4Editor
                 }
 
             }
-
+            //Kits
+            HEX = "";
+            modHEX = "";
             if (tblKitsHexTableAdapter.GetDataByNotNullModHex().Count > 0)
             {
                 foreach (DataRow dr in tblKitsHexTableAdapter.GetDataByNotNullModHex())
+                {
+                    HEX = (dr.ItemArray[1].ToString());
+                    modHEX = (dr.ItemArray[2].ToString());
+                    int position = this.Search(src, this.StringToByteArray(HEX));
+                    this.ReplaceData(this.fileName, position, this.StringToByteArray(modHEX));
+                }
+
+            }
+
+            //Fixtures
+            HEX = "";
+            modHEX = "";
+            if (tblFixturesTableAdapter.GetDataByNotNullModHex().Count > 0)
+            {
+                foreach (DataRow dr in tblFixturesTableAdapter.GetDataByNotNullModHex())
+                {
+                    HEX = (dr.ItemArray[1].ToString());
+                    modHEX = (dr.ItemArray[2].ToString());
+                    int position = this.Search(src, this.StringToByteArray(HEX));
+                    this.ReplaceData(this.fileName, position, this.StringToByteArray(modHEX));
+                }
+
+            }
+
+
+            //Comps
+            HEX = "";
+            modHEX = "";
+            if (tblCompsTableAdapter1.GetDataByNotNullModHex().Count > 0)
+            {
+                foreach (DataRow dr in tblCompsTableAdapter1.GetDataByNotNullModHex())
                 {
                     HEX = (dr.ItemArray[1].ToString());
                     modHEX = (dr.ItemArray[2].ToString());
@@ -2050,7 +2447,7 @@ namespace RC4Editor
 
             return hex;
         }
-        
+
         public int GetLittleEndianIntegerFromByteArray(byte[] data)
         {
             int length = data.Length;
@@ -2163,12 +2560,12 @@ namespace RC4Editor
                 sb.AppendLine(olvColumn.GetStringValue(model));
             var selectedCellsAsText = sb.ToString();
             if (selectedCellsAsText != "")
-                {
+            {
                 string playerHEX = DBGetPlayerHEXbyID(Convert.ToInt32(selectedCellsAsText));
                 populatePlayerDetails(playerHEX);
                 txtOrgHEX.Text = playerHEX;
             }
-           // MessageBox.Show(selectedCellsAsText);
+            // MessageBox.Show(selectedCellsAsText);
 
         }
 
@@ -2181,7 +2578,7 @@ namespace RC4Editor
         {
 
             loadFile();
-       
+
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -2202,12 +2599,37 @@ namespace RC4Editor
             {
                 saveKitsHex();
             }
+            else if (tbcMain.SelectedTab == tbcMain.TabPages["tbpFixtures"])
+            {
+                saveFixturesHex();
+            }
+            else if (tbcMain.SelectedTab == tbcMain.TabPages["tbpComps"])
+            {
+                saveCompsHex();
+            }
         }
+
 
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             if (PendingChanges > 0)
             {
+                //let's backup first
+               
+                string sourceFile = this.fileName;
+                string destinationFile = this.fileName + ".rc4editorold";
+                try
+                {
+              
+                    File.Copy(sourceFile, destinationFile, true);
+                }
+                catch (IOException iox)
+                {
+                  MessageBox.Show(iox.Message);
+                }
+
+
+                //WriteChanges
                 writeChangestoDB();
                 loadPostWrite();
             }
@@ -2217,7 +2639,10 @@ namespace RC4Editor
             }
         }
 
-        private void objListViewTeams2_SelectionChanged(object sender, EventArgs e)
+
+
+
+    private void objListViewTeams2_SelectionChanged(object sender, EventArgs e)
         {
             var olvColumn = this.olvColumn7; // whichever column you want
             var sb = new StringBuilder();
@@ -2387,6 +2812,20 @@ namespace RC4Editor
         private void tbpFixtures_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void lstFixtures_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int selectedCellsAsText = Convert.ToInt32(lstFixtures.SelectedIndex);
+            string fixHEX = DBGetFixtureHEXbyID(selectedCellsAsText);
+            loadFixtureData(fixHEX);
+        }
+
+        private void lstComp_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int selectedCellsAsText = Convert.ToInt32(lstComp.SelectedIndex);
+            string cmpHEX = DBGetCompHEXbyID(selectedCellsAsText);
+            loadCompData(cmpHEX);
         }
     }
 }
