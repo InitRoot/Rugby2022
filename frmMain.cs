@@ -345,6 +345,10 @@ namespace RC4Editor
             Properties.Settings.Default.CompStartInt = Convert.ToInt32(txtCompStartint.Text);
             Properties.Settings.Default.CompEndInt = Convert.ToInt32(txtCompEndInt.Text);
 
+            Properties.Settings.Default.Save();
+            Properties.Settings.Default.Upgrade();
+            MessageBox.Show("Saved Settings");
+
             loadSettings();
         }
         private void loadPostWrite()
@@ -423,12 +427,26 @@ namespace RC4Editor
             int posStart = 0;
             byte[] buff = null;
             buff = File.ReadAllBytes(fullFilePath);
-            posStart = Search(buff, StringToByteArray(posStartStr));
-            posStart = posStart + ExtaStr;
-            posEnd = Search(buff, StringToByteArray(posEndStr));
+            try
+            {
+                posStart = Search(buff, StringToByteArray(posStartStr));
+                posStart = posStart + ExtaStr;
+            }
+            catch (Exception exa)
+            {
+                MessageBox.Show("Error - Start!");
+            }
+            try
+            {
+                posEnd = Search(buff, StringToByteArray(posEndStr));
             // MessageBox.Show(posEnd.ToString());
             posEnd = posEnd + ExtraEnd;
-            byte[] slice = Extensions.ArraySlice(buff, posStart, posEnd);
+            }
+            catch (Exception exa)
+            {
+                MessageBox.Show("Error - End!");
+            }
+    byte[] slice = Extensions.ArraySlice(buff, posStart, posEnd);
             return slice;
 
         }
@@ -2826,6 +2844,140 @@ namespace RC4Editor
             int selectedCellsAsText = Convert.ToInt32(lstComp.SelectedIndex);
             string cmpHEX = DBGetCompHEXbyID(selectedCellsAsText);
             loadCompData(cmpHEX);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // Create an instance of the open file dialog box.
+            String fileShort = "";
+
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+
+            // Set filter options and filter index.
+            openFileDialog1.Filter = "RC Database (.db)|*.db|All Files (*.*)|*.*";
+            openFileDialog1.FilterIndex = 1;
+
+            // Call the ShowDialog method to show the dialog box.
+            bool? userClickedOK = (openFileDialog1.ShowDialog() == DialogResult.OK);
+
+            // Process input if the user clicked OK.
+            if (userClickedOK == true)
+            {
+                fileName = openFileDialog1.FileName;
+                var onlyfilename = Path.GetFileName(openFileDialog1.FileName);
+
+                //We first load each table from the database in their HEX values
+
+                Properties.Settings.Default.KitsStart = txtPlayStartOff.Text;
+                Properties.Settings.Default.KitsEnd = txtPlayEndOff.Text;
+                Properties.Settings.Default.PlayStartInt = Convert.ToInt32(txtPlayStartOffInt.Text);
+                Properties.Settings.Default.PlayEndInt = Convert.ToInt32(txtPlayEndOffInt.Text);
+
+                //Teams
+                Properties.Settings.Default.TeamsStart = txtTeamStartOff.Text;
+                Properties.Settings.Default.TeamsEnd = txtTeamEndOff.Text;
+                Properties.Settings.Default.TeamsStartInt = Convert.ToInt32(txtTeamStartOffInt.Text);
+                Properties.Settings.Default.TeamsEndInt = Convert.ToInt32(txtTeamEndOffInt.Text);
+
+                //Kits
+                Properties.Settings.Default.KitsStart = txtKitsStartOff.Text;
+                Properties.Settings.Default.KitsEnd = txtKitsEndOff.Text;
+                Properties.Settings.Default.KitsStartInt = Convert.ToInt32(txtKitsStartOffInt.Text);
+                Properties.Settings.Default.KitsEndint = Convert.ToInt32(txtKitsEndOffInt.Text);
+
+                //Lineups
+                Properties.Settings.Default.LinStart = txtLinStartOff.Text;
+                Properties.Settings.Default.LinEnd = txtLinEndOff.Text;
+                Properties.Settings.Default.LinStartInt = Convert.ToInt32(txtLinStartOffInt.Text);
+                Properties.Settings.Default.LinEndInt = Convert.ToInt32(txtLinEndOffInt.Text);
+
+
+                //Fixtures
+                Properties.Settings.Default.FixStart = txtFixStart.Text;
+                Properties.Settings.Default.FixEnd = txtFixEnd.Text;
+                //Properties.Settings.Default.LinStartInt = Convert.ToInt32(txtLinStartOffInt.Text);
+                //Properties.Settings.Default.LinEndInt = Convert.ToInt32(txtLinEndOffInt.Text);
+
+                //Comps
+                Properties.Settings.Default.CompStart = txtCompStart.Text;
+                Properties.Settings.Default.CompEnd = txtCompEnd.Text;
+                Properties.Settings.Default.CompStartInt = Convert.ToInt32(txtCompStartint.Text);
+                Properties.Settings.Default.CompEndInt = Convert.ToInt32(txtCompEndInt.Text);
+
+                try
+                {
+                    MessageBox.Show("Testing - Players...");
+                    byte[] bplayers = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.PlayStart, Properties.Settings.Default.PlayEnd, Properties.Settings.Default.PlayStartInt, Properties.Settings.Default.PlayEndInt);
+                    List<byte[]> playerssp = splitDataToByteArray(bplayers, 1348);
+                }
+                catch (Exception ze)
+                {
+                    MessageBox.Show("Failed - Players offsets not correct!");
+                }
+                try
+                {
+                    MessageBox.Show("Testing - Teams...");
+                    byte[] bteams = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.TeamsStart, Properties.Settings.Default.TeamsEnd, Properties.Settings.Default.TeamsStartInt, Properties.Settings.Default.TeamsEndInt);
+                    List<byte[]> teamssp = splitDataToByteArray(bteams, 212); 
+
+                }
+                catch (Exception ze)
+                {
+                    MessageBox.Show("Failed - Teams offsets not correct!");
+                }
+                try
+                    {
+                    MessageBox.Show("Testing - Lineups...");
+                    byte[] blineup = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.LinStart, Properties.Settings.Default.LinEnd, Properties.Settings.Default.LinStartInt, Properties.Settings.Default.LinEndInt);
+                        List<byte[]> lineupssp = splitDataToByteArray(blineup, 776);
+                }
+                catch (Exception ze)
+                {
+                    MessageBox.Show("Failed - Lineups offsets not correct!");
+                }
+                try
+                        {
+                    MessageBox.Show("Testing - Kits...");
+                    byte[] btkits = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.KitsStart, Properties.Settings.Default.KitsEnd, Properties.Settings.Default.KitsStartInt, Properties.Settings.Default.KitsEndint);
+                    List<byte[]> kitssp = splitDataToByteArray(btkits, 280);
+                }
+                catch (Exception ze)
+                {
+                    MessageBox.Show("Failed - Kits offsets not correct!");
+                }
+                try
+                {
+                    MessageBox.Show("Testing - Fixtures...");
+                    byte[] btfixtures = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.FixStart, Properties.Settings.Default.FixEnd, 0, 0);
+                    List<byte[]> fixssp = splitDataToByteArray(btfixtures, 16);
+                }
+                catch (Exception ze)
+                {
+                    MessageBox.Show("Failed - Fixtures offsets not correct!");
+                }
+                try
+                {
+                    MessageBox.Show("Testing - Competitions...");
+                    byte[] btcomps = GetGlobalBytesFromFile(fileName, Properties.Settings.Default.CompStart, Properties.Settings.Default.CompEnd, Properties.Settings.Default.CompStartInt, Properties.Settings.Default.CompEndInt);
+                    List<byte[]> compssp = splitDataToByteArray(btcomps, 100);
+                }
+                catch (Exception ze)
+                {
+                    MessageBox.Show("Failed - Competitions offsets not correct!");
+                }
+
+                //We create a new byte lists of each record, includes the size per record in bytes
+                
+
+
+
+
+
+
+
+            }
+
+
         }
     }
 }

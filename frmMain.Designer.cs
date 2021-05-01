@@ -136,6 +136,7 @@
             this.TeamIndex = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.tbpTeams = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label86 = new System.Windows.Forms.Label();
             this.label82 = new System.Windows.Forms.Label();
             this.label69 = new System.Windows.Forms.Label();
             this.label68 = new System.Windows.Forms.Label();
@@ -205,6 +206,7 @@
             this.lstFixtures = new System.Windows.Forms.ListBox();
             this.label76 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.label87 = new System.Windows.Forms.Label();
             this.label84 = new System.Windows.Forms.Label();
             this.label83 = new System.Windows.Forms.Label();
             this.label81 = new System.Windows.Forms.Label();
@@ -238,6 +240,11 @@
             this.label96 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.txtfixoffend = new System.Windows.Forms.GroupBox();
+            this.txtCompStartint = new System.Windows.Forms.TextBox();
+            this.txtCompEndInt = new System.Windows.Forms.TextBox();
+            this.txtCompEnd = new System.Windows.Forms.TextBox();
+            this.txtCompStart = new System.Windows.Forms.TextBox();
+            this.label88 = new System.Windows.Forms.Label();
             this.txtfixoffst = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.txtFixEnd = new System.Windows.Forms.TextBox();
@@ -285,14 +292,8 @@
             this.tblLineUpsHexTableAdapter = new RC4Editor.MainDBDataSetTableAdapters.tblLineUpsHexTableAdapter();
             this.tblKitsHexTableAdapter = new RC4Editor.MainDBDataSetTableAdapters.tblKitsHexTableAdapter();
             this.tblFixturesTableAdapter = new RC4Editor.MainDBDataSetTableAdapters.tblFixturesTableAdapter();
-            this.txtCompStartint = new System.Windows.Forms.TextBox();
-            this.txtCompEndInt = new System.Windows.Forms.TextBox();
-            this.txtCompEnd = new System.Windows.Forms.TextBox();
-            this.txtCompStart = new System.Windows.Forms.TextBox();
-            this.label88 = new System.Windows.Forms.Label();
             this.tblCompsTableAdapter1 = new RC4Editor.MainDBDataSetTableAdapters.tblCompsTableAdapter();
-            this.label87 = new System.Windows.Forms.Label();
-            this.label86 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
             this.pnlApp.SuspendLayout();
             this.tbcMain.SuspendLayout();
             this.tbpPlayers.SuspendLayout();
@@ -1510,6 +1511,17 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Team Details:";
             // 
+            // label86
+            // 
+            this.label86.AutoSize = true;
+            this.label86.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label86.ForeColor = System.Drawing.Color.Red;
+            this.label86.Location = new System.Drawing.Point(178, 445);
+            this.label86.Name = "label86";
+            this.label86.Size = new System.Drawing.Size(170, 14);
+            this.label86.TabIndex = 305;
+            this.label86.Text = "Tip: Ensure is \'00. [FOUR DIGITS]";
+            // 
             // label82
             // 
             this.label82.AutoSize = true;
@@ -2243,6 +2255,17 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Fixtures Editor:";
             // 
+            // label87
+            // 
+            this.label87.AutoSize = true;
+            this.label87.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label87.ForeColor = System.Drawing.Color.Red;
+            this.label87.Location = new System.Drawing.Point(446, 53);
+            this.label87.Name = "label87";
+            this.label87.Size = new System.Drawing.Size(170, 14);
+            this.label87.TabIndex = 304;
+            this.label87.Text = "Tip: Ensure is \'00. [FOUR DIGITS]";
+            // 
             // label84
             // 
             this.label84.AutoSize = true;
@@ -2566,6 +2589,7 @@
             // 
             // txtfixoffend
             // 
+            this.txtfixoffend.Controls.Add(this.button2);
             this.txtfixoffend.Controls.Add(this.txtCompStartint);
             this.txtfixoffend.Controls.Add(this.txtCompEndInt);
             this.txtfixoffend.Controls.Add(this.txtCompEnd);
@@ -2606,6 +2630,50 @@
             this.txtfixoffend.TabStop = false;
             this.txtfixoffend.Text = "App Settings:";
             this.txtfixoffend.Enter += new System.EventHandler(this.groupBox6_Enter);
+            // 
+            // txtCompStartint
+            // 
+            this.txtCompStartint.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCompStartint.Location = new System.Drawing.Point(5, 522);
+            this.txtCompStartint.Name = "txtCompStartint";
+            this.txtCompStartint.Size = new System.Drawing.Size(52, 22);
+            this.txtCompStartint.TabIndex = 297;
+            // 
+            // txtCompEndInt
+            // 
+            this.txtCompEndInt.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCompEndInt.Location = new System.Drawing.Point(393, 522);
+            this.txtCompEndInt.Name = "txtCompEndInt";
+            this.txtCompEndInt.Size = new System.Drawing.Size(52, 22);
+            this.txtCompEndInt.TabIndex = 296;
+            // 
+            // txtCompEnd
+            // 
+            this.txtCompEnd.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCompEnd.Location = new System.Drawing.Point(393, 483);
+            this.txtCompEnd.Multiline = true;
+            this.txtCompEnd.Name = "txtCompEnd";
+            this.txtCompEnd.Size = new System.Drawing.Size(370, 35);
+            this.txtCompEnd.TabIndex = 295;
+            // 
+            // txtCompStart
+            // 
+            this.txtCompStart.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCompStart.Location = new System.Drawing.Point(5, 483);
+            this.txtCompStart.Multiline = true;
+            this.txtCompStart.Name = "txtCompStart";
+            this.txtCompStart.Size = new System.Drawing.Size(372, 35);
+            this.txtCompStart.TabIndex = 294;
+            // 
+            // label88
+            // 
+            this.label88.AutoSize = true;
+            this.label88.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label88.Location = new System.Drawing.Point(3, 466);
+            this.label88.Name = "label88";
+            this.label88.Size = new System.Drawing.Size(81, 14);
+            this.label88.TabIndex = 293;
+            this.label88.Text = "Comp Offsets:";
             // 
             // txtfixoffst
             // 
@@ -3002,75 +3070,19 @@
             // 
             this.tblFixturesTableAdapter.ClearBeforeFill = true;
             // 
-            // txtCompStartint
-            // 
-            this.txtCompStartint.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCompStartint.Location = new System.Drawing.Point(5, 522);
-            this.txtCompStartint.Name = "txtCompStartint";
-            this.txtCompStartint.Size = new System.Drawing.Size(52, 22);
-            this.txtCompStartint.TabIndex = 297;
-            // 
-            // txtCompEndInt
-            // 
-            this.txtCompEndInt.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCompEndInt.Location = new System.Drawing.Point(393, 522);
-            this.txtCompEndInt.Name = "txtCompEndInt";
-            this.txtCompEndInt.Size = new System.Drawing.Size(52, 22);
-            this.txtCompEndInt.TabIndex = 296;
-            // 
-            // txtCompEnd
-            // 
-            this.txtCompEnd.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCompEnd.Location = new System.Drawing.Point(393, 483);
-            this.txtCompEnd.Multiline = true;
-            this.txtCompEnd.Name = "txtCompEnd";
-            this.txtCompEnd.Size = new System.Drawing.Size(370, 35);
-            this.txtCompEnd.TabIndex = 295;
-            // 
-            // txtCompStart
-            // 
-            this.txtCompStart.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCompStart.Location = new System.Drawing.Point(5, 483);
-            this.txtCompStart.Multiline = true;
-            this.txtCompStart.Name = "txtCompStart";
-            this.txtCompStart.Size = new System.Drawing.Size(372, 35);
-            this.txtCompStart.TabIndex = 294;
-            // 
-            // label88
-            // 
-            this.label88.AutoSize = true;
-            this.label88.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label88.Location = new System.Drawing.Point(3, 466);
-            this.label88.Name = "label88";
-            this.label88.Size = new System.Drawing.Size(81, 14);
-            this.label88.TabIndex = 293;
-            this.label88.Text = "Comp Offsets:";
-            // 
             // tblCompsTableAdapter1
             // 
             this.tblCompsTableAdapter1.ClearBeforeFill = true;
             // 
-            // label87
+            // button2
             // 
-            this.label87.AutoSize = true;
-            this.label87.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label87.ForeColor = System.Drawing.Color.Red;
-            this.label87.Location = new System.Drawing.Point(446, 53);
-            this.label87.Name = "label87";
-            this.label87.Size = new System.Drawing.Size(170, 14);
-            this.label87.TabIndex = 304;
-            this.label87.Text = "Tip: Ensure is \'00. [FOUR DIGITS]";
-            // 
-            // label86
-            // 
-            this.label86.AutoSize = true;
-            this.label86.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label86.ForeColor = System.Drawing.Color.Red;
-            this.label86.Location = new System.Drawing.Point(178, 445);
-            this.label86.Name = "label86";
-            this.label86.Size = new System.Drawing.Size(170, 14);
-            this.label86.TabIndex = 305;
-            this.label86.Text = "Tip: Ensure is \'00. [FOUR DIGITS]";
+            this.button2.Location = new System.Drawing.Point(860, 489);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(105, 27);
+            this.button2.TabIndex = 298;
+            this.button2.Text = "Test DB";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // frmMain
             // 
@@ -3406,6 +3418,7 @@
         private MainDBDataSetTableAdapters.tblCompsTableAdapter tblCompsTableAdapter1;
         private System.Windows.Forms.Label label86;
         private System.Windows.Forms.Label label87;
+        private System.Windows.Forms.Button button2;
     }
 }
 
